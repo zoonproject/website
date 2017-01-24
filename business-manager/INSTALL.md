@@ -1,13 +1,6 @@
 # ZOON -- `business-manager` -- Installation Instructions
 
-** Warning! Incomplete documentation **
-
-## Dependencies
-
- * Maven (build)
- * Java 7 (build, deploy)
- * Java-based Web Server, e.g. Apache Tomcat. (deploy)
- * Database (deploy).
+**Warning! Incomplete documentation**
 
 ## Installation
 

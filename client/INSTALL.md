@@ -1,3 +1,3 @@
 # ZOON -- `client` -- Installation Instructions
 
-** Warning! Incomplete documentation **
+**Warning! Incomplete documentation**
