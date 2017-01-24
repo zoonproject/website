@@ -1,4 +1,4 @@
-# ZOON -- Business Manager -- Installation Instructions
+# ZOON -- `business-manager` -- Installation Instructions
 
 ** Warning! Incomplete documentation **
 

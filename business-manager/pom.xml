@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <relativePath>../zoon-shared/pom.xml</relativePath>
+    <relativePath>../shared/pom.xml</relativePath>
     <groupId>uk.ac.ox.cs.science2020.zoon</groupId>
     <artifactId>parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
@@ -43,7 +43,7 @@
 
     <dependency>
       <groupId>uk.ac.ox.cs.science2020.zoon</groupId>
-      <artifactId>zoon-shared</artifactId>
+      <artifactId>shared</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
