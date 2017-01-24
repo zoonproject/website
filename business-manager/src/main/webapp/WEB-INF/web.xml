@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5"
+         xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+  <description>
+    <![CDATA[
+      Business manager web.xml.
+      Check out http://java.sun.com/xml/ns/javaee/web-app_2.5.xsd for xml element info.
+      Note: First 30-40 lines of the business manager log (if debug logging) file captures startup
+             process.
+    ]]>
+  </description>
+
+  <context-param>
+    <description>
+      <![CDATA[
+      By default ContextLoaderListener below looks for /WEB-INF/applicationContext.xml - we're
+        telling it instead to look for /WEB-INF/spring/root-context.xml.
+      ]]>
+    </description>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>
+      /WEB-INF/spring/root-context.xml
+    </param-value>
+  </context-param>
+
+  <listener>
+    <description>
+      <![CDATA[
+      Initialisation of Spring Framework kicked off on application's startup.
+      Starts up and shut down of Spring's root web application context (based on contents of
+        context-param element above).
+      http://static.springsource.org/spring/docs/3.1.x/javadoc-api/org/springframework/web/context/ContextLoaderListener.html
+      ]]>
+    </description>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+
+  <servlet>
+    <description>
+      <![CDATA[
+      DispatcherServlet grabs whatever incoming request (directed to it via the servlet-mapping
+        element below) before passing the request object to the appropriate MVC controller.
+      By default the DispatcherServlet will try to look for /WEB-INF/spring/spring-business-config.xml
+        - which in our case imports some /META-INF/spring/ctx/appCtx.*.xml files).
+      The servlet inc. context is loaded on startup (note load-on-startup element!).
+      ]]>
+    </description>
+    <servlet-name>businessServlet</servlet-name>
+    <servlet-class>org.springframework.ws.transport.http.MessageDispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>
+        /WEB-INF/spring/spring-business_manager-config.xml
+      </param-value>
+    </init-param>
+    <init-param>
+      <param-name>transformWsdlLocations</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <servlet-mapping>
+    <!-- Whatever client request arriving at http://<host>:<port>/<servlet>/bws/??,
+         invoke the servlet "businessServlet" above -->
+    <servlet-name>businessServlet</servlet-name>
+    <!-- Note : Change in url-pattern below must be reflected in appCtx.ws.xml -->
+    <url-pattern>/bws/*</url-pattern>
+  </servlet-mapping>
+
+</web-app>

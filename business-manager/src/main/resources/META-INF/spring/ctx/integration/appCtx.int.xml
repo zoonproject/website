@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/integration"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:int-ws="http://www.springframework.org/schema/integration/ws"
+             xmlns:oxm="http://www.springframework.org/schema/oxm"
+             xmlns:p="http://www.springframework.org/schema/p"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+                                 http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration-4.0.xsd
+                                 http://www.springframework.org/schema/integration/ws http://www.springframework.org/schema/integration/ws/spring-integration-ws-4.0.xsd
+                                 http://www.springframework.org/schema/oxm http://www.springframework.org/schema/oxm/spring-oxm-4.0.xsd">
+
+  <beans:description>
+    <![CDATA[
+      Business manager main SI context which imports other SI contexts as subprocessing contexts.
+    ]]>
+  </beans:description>
+
+  <!-- Context which processes app manager-related activities
+  <beans:import resource="app_manager/appCtx.appManager.xml" />
+  -->
+
+  <!-- ZONE 1 : Handle incoming SOAP and decide which downstream process to invoke +++++++++++++ -->
+
+  <!-- All incoming SOAP messages are unmarshalled (XML -> Java), serialized, and passed along this
+       channel -->
+  <channel id="channel_unmarshalledInboundWSRequest" />
+
+  <!-- JAXB (un)marshaller which converts XML to Java objects and vice versa (according to the 
+       classes defined in the context-path attribute.
+       The classes in the context-path are created during the Maven build process using the apache
+       CXF plugin which reads (static, i.e. src/main/resources/wsdl/) wsdl files (see pom.xml) -->
+  <oxm:jaxb2-marshaller id="jaxb2BusinessMarshaller"
+                        context-path="uk.ac.ox.cs.science2020.zoon.business_manager.ws.schema.jaxb" />
+
+  <!-- All incoming Web Service SOAP requests arrive at this point.
+       The ws.EndpointConfiguration class directs incoming SOAP messages to this inbound gateway
+       which represents the entry to the Spring Integration workflow.
+       Note: Most marshallers implement both Marshaller and Unmarshaller, in which case only 
+             marshaller attribute required -->
+  <int-ws:inbound-gateway id="wsInboundGateway"
+                          request-channel="channel_unmarshalledInboundWSRequest"
+                          marshaller="jaxb2BusinessMarshaller" />
+
+  <!-- The following channels containing client requests are used post- payload-type-routing to
+       send the unmarshalled java classes as the message payload to downstream processors -->
+  <channel id="channel_toArtifactStoreRequestProcessor"
+           datatype="uk.ac.ox.cs.science2020.zoon.business_manager.ws.schema.jaxb.ArtifactStoreRequest" />
+  <channel id="channel_toDeleteModuleRequestProcessor"
+           datatype="uk.ac.ox.cs.science2020.zoon.business_manager.ws.schema.jaxb.DeleteModuleRequest" />
+  <channel id="channel_toModuleTypesRequestProcessor"
+           datatype="uk.ac.ox.cs.science2020.zoon.business_manager.ws.schema.jaxb.ModuleTypesRequest" />
+  <channel id="channel_toPrivateModulesRequestProcessor"
+           datatype="uk.ac.ox.cs.science2020.zoon.business_manager.ws.schema.jaxb.PrivateModulesRequest" />
+  <channel id="channel_toPrivateWorkflowCallsRequestProcessor"
+           datatype="uk.ac.ox.cs.science2020.zoon.business_manager.ws.schema.jaxb.PrivateWorkflowCallsRequest" />
+  <channel id="channel_toSimulationRequestProcessor"
+           datatype="uk.ac.ox.cs.science2020.zoon.business_manager.ws.schema.jaxb.ProcessSimulationRequest" />
+  <channel id="channel_toSaveModuleInZOONStoreRequest"
+           datatype="uk.ac.ox.cs.science2020.zoon.business_manager.ws.schema.jaxb.SaveModuleInZOONStoreRequest" />
+  <channel id="channel_toSimulationNonResultsRequestProcessor"
+           datatype="uk.ac.ox.cs.science2020.zoon.business_manager.ws.schema.jaxb.SimulationNonResultsRequest" />
+  <channel id="channel_toSimulationResultsRequestProcessor"
+           datatype="uk.ac.ox.cs.science2020.zoon.business_manager.ws.schema.jaxb.SimulationResultsRequest" />
+  <channel id="channel_toArtifactVerificationRequestProcessor"
+           datatype="uk.ac.ox.cs.science2020.zoon.business_manager.ws.schema.jaxb.VerifyArtifactRequest" />
+  <channel id="channel_toModuleVerificationResultsRequestProcessor"
+           datatype="uk.ac.ox.cs.science2020.zoon.business_manager.ws.schema.jaxb.VerifyModuleResultsRequest" />
+
+  <!-- Looks at the object type arriving on the incoming channel and routes the object along 
+       specified channels to downstream processors. -->
+  <payload-type-router id="wsPayloadRouter"
+                       input-channel="channel_unmarshalledInboundWSRequest">
+    <mapping type="uk.ac.ox.cs.science2020.zoon.business_manager.ws.schema.jaxb.ArtifactStoreRequest"
+             channel="channel_toArtifactStoreRequestProcessor" />
+    <mapping type="uk.ac.ox.cs.science2020.zoon.business_manager.ws.schema.jaxb.DeleteModuleRequest"
+             channel="channel_toDeleteModuleRequestProcessor" />
+    <mapping type="uk.ac.ox.cs.science2020.zoon.business_manager.ws.schema.jaxb.ModuleTypesRequest"
+             channel="channel_toModuleTypesRequestProcessor" />
+    <mapping type="uk.ac.ox.cs.science2020.zoon.business_manager.ws.schema.jaxb.PrivateModulesRequest"
+             channel="channel_toPrivateModulesRequestProcessor" />
+    <mapping type="uk.ac.ox.cs.science2020.zoon.business_manager.ws.schema.jaxb.PrivateWorkflowCallsRequest"
+             channel="channel_toPrivateWorkflowCallsRequestProcessor" />
+    <mapping type="uk.ac.ox.cs.science2020.zoon.business_manager.ws.schema.jaxb.ProcessSimulationRequest"
+             channel="channel_toSimulationRequestProcessor" />
+    <mapping type="uk.ac.ox.cs.science2020.zoon.business_manager.ws.schema.jaxb.SaveModuleInZOONStoreRequest"
+             channel="channel_toSaveModuleInZOONStoreRequest" />
+    <mapping type="uk.ac.ox.cs.science2020.zoon.business_manager.ws.schema.jaxb.SimulationNonResultsRequest"
+             channel="channel_toSimulationNonResultsRequestProcessor" />
+    <mapping type="uk.ac.ox.cs.science2020.zoon.business_manager.ws.schema.jaxb.SimulationResultsRequest"
+             channel="channel_toSimulationResultsRequestProcessor" />
+    <mapping type="uk.ac.ox.cs.science2020.zoon.business_manager.ws.schema.jaxb.VerifyArtifactRequest"
+             channel="channel_toArtifactVerificationRequestProcessor" />
+    <mapping type="uk.ac.ox.cs.science2020.zoon.business_manager.ws.schema.jaxb.VerifyModuleResultsRequest"
+             channel="channel_toModuleVerificationResultsRequestProcessor" />
+  </payload-type-router>
+
+  <!-- ZONE 2 : Downstream Spring Integration processing workflows +++++++++++++++++++++++++++++ -->
+
+  <service-activator input-channel="channel_toArtifactStoreRequestProcessor"
+                     method="processArtifactStoreRequest">
+    <beans:bean class="uk.ac.ox.cs.science2020.zoon.business_manager.ws.business_manager.ArtifactStoreProcessor" />
+  </service-activator>
+
+  <beans:bean id="modulesRequestProcessor"
+              class="uk.ac.ox.cs.science2020.zoon.business_manager.ws.business_manager.ModulesRequestProcessor" />
+  <beans:bean id="workflowCallsRequestProcessor"
+              class="uk.ac.ox.cs.science2020.zoon.business_manager.ws.business_manager.WorkflowCallsRequestProcessor" />
+
+  <service-activator input-channel="channel_toArtifactVerificationRequestProcessor"
+                     method="verifyArtifact"
+                     ref="modulesRequestProcessor" />
+  <service-activator input-channel="channel_toDeleteModuleRequestProcessor"
+                     method="deleteModule"
+                     ref="modulesRequestProcessor" />
+  <service-activator input-channel="channel_toModuleTypesRequestProcessor"
+                     method="retrieveModuleTypes"
+                     ref="modulesRequestProcessor" />
+  <service-activator input-channel="channel_toModuleVerificationResultsRequestProcessor"
+                     method="verifyModuleResults"
+                     ref="modulesRequestProcessor" />
+  <service-activator input-channel="channel_toPrivateModulesRequestProcessor"
+                     method="retrievePrivateModules"
+                     ref="modulesRequestProcessor" />
+  <service-activator input-channel="channel_toSaveModuleInZOONStoreRequest"
+                     method="saveModuleInZOONStore"
+                     ref="modulesRequestProcessor" />
+
+  <service-activator input-channel="channel_toPrivateWorkflowCallsRequestProcessor"
+                     method="retrievePrivateWorkflowCalls"
+                     ref="workflowCallsRequestProcessor" />
+
+  <service-activator id="simulationRequestProcessor"
+                     input-channel="channel_toSimulationRequestProcessor"
+                     method="processSimulationRequest">
+    <beans:bean class="uk.ac.ox.cs.science2020.zoon.business_manager.ws.business_manager.SimulationRequestProcessor" />
+  </service-activator>
+  <service-activator id="simulationNonResultRequestProcessor"
+                     input-channel="channel_toSimulationNonResultsRequestProcessor"
+                     method="processSimulationNonResultsRequest">
+    <beans:bean class="uk.ac.ox.cs.science2020.zoon.business_manager.ws.business_manager.SimulationNonResultsRequestProcessor" />
+  </service-activator>
+  <service-activator id="simulationResultRequestProcessor"
+                     input-channel="channel_toSimulationResultsRequestProcessor"
+                     method="processSimulationResultsRequest">
+    <beans:bean class="uk.ac.ox.cs.science2020.zoon.business_manager.ws.business_manager.SimulationResultsRequestProcessor" />
+  </service-activator>
+
+  <beans:import resource="parsing/appCtx.modules.xml" />
+  <beans:import resource="simulation/appCtx.sim.processRequest.xml" />
+  <beans:import resource="simulation/appCtx.sim.processSimulation.xml" />
+  <beans:import resource="simulation/appCtx.sim.monitoring.xml" />
+
+</beans:beans>

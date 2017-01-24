@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+  <description>
+    <![CDATA[
+    Context configuration handling the sending of emails.
+    Try http://connector.sourceforge.net/doc-files/Properties.html for *possible* options!
+    ]]>
+  </description>
+
+  <bean id="mailSender"
+        class="org.springframework.mail.javamail.JavaMailSenderImpl"
+        p:host="@mail.smtp.host@"
+        p:port="@mail.smtp.port@"
+        p:username="@mail.smtp.username@"
+        p:password="@mail.smtp.password@">
+    <description>
+      <![CDATA[
+      This is the thing that actually sends the email.
+      ]]>
+    </description>
+    <property name="javaMailProperties">
+      <props>
+        <prop key="mail.transport.protocol">@mail.transport.protocol@</prop>
+        <prop key="mail.smtp.auth">@mail.smtp.auth@</prop>
+        <prop key="mail.smtp.connectiontimeout">@mail.smtp.connectiontimeout@</prop>
+        <prop key="mail.smtp.starttls.enable">@mail.smtp.starttls.enable@</prop>
+        <prop key="mail.debug">@mail.debug@</prop>
+      </props>
+    </property>
+  </bean>
+
+  <bean id="templateRegistrationMail"
+        class="org.springframework.mail.SimpleMailMessage"
+        p:to="@mail.regn.to@"
+        p:from="@mail.regn.from@"
+        p:subject="@mail.regn.subject@">
+    <description>
+      <![CDATA[
+      Template registration email message.
+      ]]>
+    </description>
+    <property name="bcc">
+      <bean factory-method="split" class="org.apache.commons.lang3.StringUtils">
+        <constructor-arg value="@mail.regn.bcc@" />
+      </bean>
+    </property>
+  </bean>
+</beans>

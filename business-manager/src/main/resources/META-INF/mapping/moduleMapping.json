@@ -1,0 +1,15 @@
+{
+  "zoon": {
+    "module": [
+      {
+        "parameters": {
+          "path_match": "parameters.*",
+          "mapping": {
+            "type": "string",
+            "index": "not_analyzed"
+          }
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/integration"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:task="http://www.springframework.org/schema/task"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+                                 http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration-4.0.xsd
+                                 http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.0.xsd">
+
+  <channel id="parsingModules_channel_parseResults" />
+  <channel id="parsingModules_channel_toSplitter" />
+
+  <gateway id="modulesParsingGateway"
+           service-interface="uk.ac.ox.cs.science2020.zoon.business_manager.business.parsing.modules.ModulesParsingGateway">
+    <method name="runModulesParsing"
+            request-channel="parsingModules_channel_toSplitter"
+            reply-channel="parsingModules_channel_parseResults" />
+  </gateway>
+
+  <task:executor id="parsingModules_toProcessingExecutor"
+                 pool-size="@processors.limit@"
+                 queue-capacity="100"
+                 keep-alive="120" />
+  <channel id="executorChannel_toParsingInitiator">
+    <dispatcher task-executor="parsingModules_toProcessingExecutor" />
+  </channel>
+
+  <splitter id="parsingModules_modulesSplitter"
+            input-channel="parsingModules_channel_toSplitter"
+            method="split"
+            output-channel="executorChannel_toParsingInitiator">
+    <beans:bean class="uk.ac.ox.cs.science2020.zoon.business_manager.business.parsing.modules.ModulesSplitter" />
+  </splitter>
+
+  <channel id="parsingModules_channel_toAggregator" />
+
+  <service-activator id="srvactModuleParser"
+                     input-channel="executorChannel_toParsingInitiator"
+                     method="parseModule"
+                     output-channel="parsingModules_channel_toAggregator">
+    <beans:bean class="uk.ac.ox.cs.science2020.zoon.business_manager.business.parsing.modules.ModuleParser" />
+  </service-activator>
+
+  <aggregator id="parsingModules_modulesAggregator"
+              input-channel="parsingModules_channel_toAggregator"
+              output-channel="parsingModules_channel_parseResults" />
+
+</beans:beans>

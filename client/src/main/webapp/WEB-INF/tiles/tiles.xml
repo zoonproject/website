@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+                                    "http://tiles.apache.org/dtds/tiles-config_3_0.dtd" [
+  <!ENTITY tilesLayout "/WEB-INF/tiles/layout">
+  <!ENTITY tilesTemplate "/WEB-INF/tiles/template">
+
+  <!ENTITY aboutLayout "/WEB-INF/tiles/layout/about">
+  <!ENTITY commonLayout "/WEB-INF/tiles/layout/common">
+  <!ENTITY contactLayout "/WEB-INF/tiles/layout/contact">
+  <!ENTITY indexLayout "/WEB-INF/tiles/layout/index">
+  <!ENTITY loginLayout "/WEB-INF/tiles/layout/login">
+  <!ENTITY moduleLayout "/WEB-INF/tiles/layout/module">
+  <!ENTITY modulesLayout "/WEB-INF/tiles/layout/modules">
+  <!ENTITY moduleManageLayout "/WEB-INF/tiles/layout/module_manage">
+  <!ENTITY moduleUploadZOONLayout "/WEB-INF/tiles/layout/module_ZOON">
+  <!ENTITY moduleVerifyLayout "/WEB-INF/tiles/layout/module_verify">
+  <!ENTITY privacyLayout "/WEB-INF/tiles/layout/privacy">
+  <!ENTITY tutorialsLayout "/WEB-INF/tiles/layout/tutorials">
+  <!ENTITY userManageLayout "/WEB-INF/tiles/layout/user_manage">
+  <!ENTITY userProfileLayout "/WEB-INF/tiles/layout/user_profile">
+  <!ENTITY userRegisterLayout "/WEB-INF/tiles/layout/user_register">
+  <!ENTITY workflowCallLayout "/WEB-INF/tiles/layout/workflow_call">
+  <!ENTITY workflowCallsLayout "/WEB-INF/tiles/layout/workflow_calls">
+]>
+<tiles-definitions>
+  <definition name="base" template="&tilesTemplate;/defaultTemplate.jsp">
+    <put-attribute name="http" value="&tilesLayout;/http/http.jsp" />
+    <put-attribute name="html_head.bootstrap" value="&tilesLayout;/bootstrap.jsp" />
+    <put-attribute name="page.title" value="&tilesLayout;/html_head/title.jsp" />
+    <put-attribute name="html_head.general" value="&tilesLayout;/html_head/general.jsp" />
+    <put-attribute name="html_head.javascript" value="&tilesLayout;/html_head/javascript.jsp" />
+    <put-attribute name="page.javascript" value="&tilesLayout;/empty.jsp" />
+    <put-attribute name="html_head.style" value="&tilesLayout;/html_head/style.jsp" />
+    <put-attribute name="page.style" value="&tilesLayout;/empty.jsp" />
+    <put-attribute name="banner" value="&tilesLayout;/empty.jsp" />
+    <put-attribute name="notification" value="&tilesLayout;/notification.jsp" />
+    <put-attribute name="middle" value="&tilesLayout;/empty.jsp" />
+    <put-attribute name="bottom" value="&tilesLayout;/empty.jsp" />
+  </definition>
+
+  <!--+
+      | These definition names are hardcoded in the ClientIdentifiers#PAGE_? properties.
+      +-->
+
+  <definition name="page_about" extends="base">
+    <put-attribute name="page.title" value="&aboutLayout;/html_head/title.jsp" />
+    <put-attribute name="banner" value="&commonLayout;/banner.jsp" />
+    <put-attribute name="middle" value="&aboutLayout;/middle.jsp" />
+  </definition>
+
+  <definition name="page_contact" extends="base">
+    <put-attribute name="page.title" value="&contactLayout;/html_head/title.jsp" />
+    <put-attribute name="banner" value="&commonLayout;/banner.jsp" />
+    <put-attribute name="middle" value="&contactLayout;/middle.jsp" />
+  </definition>
+
+  <definition name="page_index" extends="base">
+    <put-attribute name="page.title" value="&indexLayout;/html_head/title.jsp" />
+    <put-attribute name="banner" value="&commonLayout;/banner.jsp" />
+    <put-attribute name="middle" value="&indexLayout;/middle.jsp" />
+  </definition>
+
+  <definition name="page_login" extends="base">
+    <put-attribute name="page.title" value="&loginLayout;/html_head/title.jsp" />
+    <put-attribute name="page.javascript" value="&loginLayout;/html_head/javascript.jsp" />
+    <put-attribute name="banner" value="&commonLayout;/banner.jsp" />
+    <put-attribute name="middle" value="&loginLayout;/middle.jsp" />
+  </definition>
+
+  <definition name="page_module" extends="base">
+    <put-attribute name="page.title" value="&moduleLayout;/html_head/title.jsp" />
+    <put-attribute name="banner" value="&commonLayout;/banner.jsp" />
+    <put-attribute name="middle" value="&moduleLayout;/middle.jsp" />
+  </definition>
+
+  <definition name="page_module_manage" extends="base">
+    <put-attribute name="page.title" value="&moduleManageLayout;/html_head/title.jsp" />
+    <put-attribute name="page.javascript" value="&moduleManageLayout;/html_head/javascript.jsp" />
+    <put-attribute name="banner" value="&commonLayout;/banner.jsp" />
+    <put-attribute name="middle" value="&moduleManageLayout;/middle.jsp" />
+  </definition>
+
+  <definition name="page_module_upload_ZOON" extends="base">
+    <put-attribute name="page.title" value="&moduleUploadZOONLayout;/html_head/title.jsp" />
+    <put-attribute name="page.javascript" value="&moduleUploadZOONLayout;/html_head/javascript.jsp" />
+    <put-attribute name="banner" value="&commonLayout;/banner.jsp" />
+    <put-attribute name="middle" value="&moduleUploadZOONLayout;/middle.jsp" />
+  </definition>
+
+  <definition name="page_module_verify" extends="base">
+    <put-attribute name="page.title" value="&moduleVerifyLayout;/html_head/title.jsp" />
+    <put-attribute name="page.javascript" value="&moduleVerifyLayout;/html_head/javascript.jsp" />
+    <put-attribute name="banner" value="&commonLayout;/banner.jsp" />
+    <put-attribute name="middle" value="&moduleVerifyLayout;/middle.jsp" />
+  </definition>
+
+  <definition name="page_modules" extends="base">
+    <put-attribute name="page.title" value="&modulesLayout;/html_head/title.jsp" />
+    <put-attribute name="page.javascript" value="&modulesLayout;/html_head/javascript.jsp" />
+    <put-attribute name="banner" value="&commonLayout;/banner.jsp" />
+    <put-attribute name="middle" value="&modulesLayout;/middle.jsp" />
+  </definition>
+
+  <definition name="page_privacy" extends="base">
+    <put-attribute name="page.title" value="&privacyLayout;/html_head/title.jsp" />
+    <put-attribute name="banner" value="&commonLayout;/banner.jsp" />
+    <put-attribute name="middle" value="&privacyLayout;/middle.jsp" />
+  </definition>
+
+  <definition name="page_tutorials" extends="base">
+    <put-attribute name="page.title" value="&tutorialsLayout;/html_head/title.jsp" />
+    <put-attribute name="page.style" value="&tutorialsLayout;/html_head/style.jsp" />
+    <put-attribute name="banner" value="&commonLayout;/banner.jsp" />
+    <put-attribute name="middle" value="&tutorialsLayout;/middle.jsp" />
+  </definition>
+
+  <definition name="page_user_manage" extends="base">
+    <put-attribute name="page.title" value="&userManageLayout;/html_head/title.jsp" />
+    <put-attribute name="page.javascript" value="&userManageLayout;/html_head/javascript.jsp" />
+    <put-attribute name="page.style" value="&userManageLayout;/html_head/style.jsp" />
+    <put-attribute name="banner" value="&commonLayout;/banner.jsp" />
+    <put-attribute name="middle" value="&userManageLayout;/middle.jsp" />
+  </definition>
+
+  <definition name="page_user_profile" extends="base">
+    <put-attribute name="page.title" value="&userProfileLayout;/html_head/title.jsp" />
+    <put-attribute name="page.javascript" value="&userProfileLayout;/html_head/javascript.jsp" />
+    <put-attribute name="banner" value="&commonLayout;/banner.jsp" />
+    <put-attribute name="middle" value="&userProfileLayout;/middle.jsp" />
+  </definition>
+
+  <definition name="page_user_register" extends="base">
+    <put-attribute name="page.title" value="&userRegisterLayout;/html_head/title.jsp" />
+    <put-attribute name="page.javascript" value="&userRegisterLayout;/html_head/javascript.jsp" />
+    <put-attribute name="banner" value="&commonLayout;/banner.jsp" />
+    <put-attribute name="middle" value="&userRegisterLayout;/middle.jsp" />
+  </definition>
+
+  <definition name="page_workflow_call" extends="base">
+    <put-attribute name="page.javascript" value="&workflowCallLayout;/html_head/javascript.jsp" />
+    <put-attribute name="page.title" value="&workflowCallLayout;/html_head/title.jsp" />
+    <put-attribute name="page.style" value="&workflowCallLayout;/html_head/style.jsp" />
+    <put-attribute name="banner" value="&commonLayout;/banner.jsp" />
+    <put-attribute name="middle" value="&workflowCallLayout;/middle.jsp" />
+  </definition>
+
+  <definition name="page_workflow_calls" extends="base">
+    <put-attribute name="page.javascript" value="&workflowCallsLayout;/html_head/javascript.jsp" />
+    <put-attribute name="page.title" value="&workflowCallsLayout;/html_head/title.jsp" />
+    <put-attribute name="banner" value="&commonLayout;/banner.jsp" />
+    <put-attribute name="middle" value="&workflowCallsLayout;/middle.jsp" />
+  </definition>
+</tiles-definitions>

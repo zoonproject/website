@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/integration"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:task="http://www.springframework.org/schema/task"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+                                 http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration-4.0.xsd
+                                 http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.0.xsd">
+
+  <beans:description>
+    <![CDATA[
+    Workflow processing.
+    ]]>
+  </beans:description>
+
+  <channel id="processWorkflow_channel_toInvoker"
+           datatype="uk.ac.ox.cs.science2020.zoon.business_manager.entity.Simulation" />
+
+  <service-activator input-channel="processSimulation_publishsubscribeChannel_toProcessing"
+                     output-channel="processWorkflow_channel_toInvoker"
+                     method="preProcess">
+    <beans:bean class="uk.ac.ox.cs.science2020.zoon.business_manager.business.ZOONRunPreProcessor" />
+  </service-activator>
+
+  <service-activator input-channel="processWorkflow_channel_toInvoker"
+                     output-channel="processSimulation_channel_toPostWorkflowProcessing"
+                     method="invoke">
+    <beans:bean class="uk.ac.ox.cs.science2020.zoon.business_manager.business.ZOONRunner" />
+  </service-activator>
+
+</beans:beans>

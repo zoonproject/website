@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+  <description>
+    <![CDATA[
+      Outbound WSS4J security configurations.
+      Referenced by spring-business_manager-config.xml
+    ]]>
+  </description>
+
+  <!-- TODO : This would need to change if the AP-preDiCT binary could send a status itself -->
+  <!-- Used in appCtx.appManager.ws.xml and AppManagerProxyImpl.java -->
+  <bean id="wsAppManagerServicesInterceptor"
+        class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
+    <description>
+      Secured outbound WS calls to the AppManager, e.g. status updates from monitors.
+      Referenced by AppManagerProxyImpl.java and BusinessIdentifiers.java
+    </description>
+    <property name="securementActions" value="UsernameToken" />
+    <property name="securementUsername" value="${securement.app.username}" />
+    <property name="securementPassword" value="${securement.app.password}" />
+  </bean>
+
+</beans>

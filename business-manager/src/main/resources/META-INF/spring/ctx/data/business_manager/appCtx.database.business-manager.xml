@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+                           http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd
+                           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+  <description>
+    <![CDATA[
+    Business manager main Spring database-related configuration context.
+    ]]>
+  </description>
+
+  <bean id="businessTransactionManager"
+        autowire="byName"
+        class="org.springframework.orm.jpa.JpaTransactionManager">
+    <description>
+      <![CDATA[
+      PlatformTransactionManager implementation for a single JPA EntityManagerFactory. Binds a
+        JPA EntityManager from the specified factory to the thread, potentially allowing for one
+        thread-bound EntityManager per factory. SharedEntityManagerCreator and JpaTemplate are
+        aware of thread-bound entity managers and participate in such transactions automatically.
+        Using either is required for JPA access code supporting this transaction management 
+        mechanism.
+      This transaction manager is appropriate for applications that use a single JPA
+        EntityManagerFactory for transactional data access. JTA (usually through 
+        JtaTransactionManager) is necessary for accessing multiple transactional resources within
+        the same transaction. Note that you need to configure your JPA provider accordingly in 
+        order to make it participate in JTA transactions.
+      This transaction manager also supports direct DataSource access within a transaction (i.e. 
+        plain JDBC code working with the same DataSource). This allows for mixing services which
+        access JPA and services which use plain JDBC (without being aware of JPA)! Application 
+        code needs to stick to the same simple Connection lookup pattern as with 
+        DataSourceTransactionManager (i.e. DataSourceUtils.getConnection(javax.sql.DataSource) or
+        going through a TransactionAwareDataSourceProxy). Note that this requires a 
+        vendor-specific JpaDialect to be configured.
+      Note: To be able to register a DataSource's Connection for plain JDBC code, this instance
+        needs to be aware of the DataSource (setDataSource(javax.sql.DataSource)). The given 
+        DataSource should obviously match the one used by the given EntityManagerFactory. This
+        transaction manager will autodetect the DataSource used as known connection factory of the
+        EntityManagerFactory, so you usually don't need to explicitly specify the "dataSource" 
+        property.
+      On JDBC 3.0, this transaction manager supports nested transactions via JDBC 3.0 Savepoints.
+        The AbstractPlatformTransactionManager.setNestedTransactionAllowed(boolean)
+        "nestedTransactionAllowed"} flag defaults to "false", though, as nested transactions will
+        just apply to the JDBC Connection, not to the JPA EntityManager and its cached objects. 
+        You can manually set the flag to "true" if you want to use nested transactions for JDBC
+        access code which participates in JPA transactions (provided that your JDBC driver 
+        supports Savepoints). Note that JPA itself does not support nested transactions! Hence,
+        do not expect JPA access code to semantically participate in a nested transaction.
+      ]]> 
+    </description>
+    <property name="entityManagerFactory" ref="businessEntityManagerFactory" />
+    <property name="dataSource" ref="businessDataSource" />
+  </bean>
+
+  <tx:annotation-driven transaction-manager="businessTransactionManager" />
+
+  <!-- Note: Place nested <beans> definitions at the end of the xml -->
+
+  <beans profile="test">
+    <bean id="businessEntityManagerFactory"
+          autowire="byName"
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+      <property name="dataSource" ref="businessDataSource" />
+      <property name="jpaVendorAdapter">
+        <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+      </property>
+      <!-- Using an unconventional location (i.e. not META-INF/persistence.xml) to emphasise usage -->
+      <property name="persistenceXmlLocation"
+                value="classpath:META-INF/data/business_manager-persistence.test.xml" />
+    </bean>
+    <jdbc:embedded-database id="businessDataSource" />
+  </beans>
+
+  <beans profile="business_manager_embedded, business_manager_mysql">
+    <bean id="businessEntityManagerFactory"
+          autowire="byName"
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+      <description>
+        <![CDATA[
+        FactoryBean that creates a JPA EntityManagerFactory according to JPA's standard container
+          bootstrap contract. This is the most powerful way to set up a shared JPA
+          EntityManagerFactory in a Spring application context; the EntityManagerFactory can then be
+          passed to JPA-based DAOs via dependency injection. Note that switching to a JNDI lookup or
+          to a LocalEntityManagerFactoryBean  definition is just a matter of configuration!
+        As with LocalEntityManagerFactoryBean, configuration settings are usually read in from a 
+          META-INF/persistence.xml config file, residing in the class path, according to the general
+          JPA configuration contract. However, this FactoryBean is more flexible in that you can 
+          override the location of the persistence.xml file, specify the JDBC DataSources to link 
+          to, etc. Furthermore, it allows for pluggable class instrumentation through Spring's 
+          LoadTimeWeaver abstraction, instead of being tied to a special VM agent specified on JVM
+          startup.
+        Internally, this FactoryBean parses the persistence.xml file itself and creates a 
+          corresponding PersistenceUnitInfo object (with further configuration merged in, such as
+          JDBC DataSources and the Spring LoadTimeWeaver), to be passed to the chosen JPA 
+          PersistenceProvider. This corresponds to a local JPA container with full support for the
+          standard JPA container contract.
+        The exposed EntityManagerFactory object will implement all the interfaces of the underlying
+          native EntityManagerFactory returned by the PersistenceProvider, plus the 
+          EntityManagerFactoryInfo interface which exposes additional metadata as assembled by this
+          FactoryBean.
+        ]]>
+      </description>
+      <property name="dataSource" ref="businessDataSource" />
+      <property name="jpaVendorAdapter">
+        <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+      </property>
+      <!-- Using an unconventional location (i.e. not META-INF/persistence.xml) to emphasise usage -->
+      <property name="persistenceXmlLocation"
+                value="classpath:META-INF/data/business_manager-persistence.xml" />
+    </bean>
+  </beans>
+
+  <beans profile="business_manager_embedded">
+    <description>
+      <![CDATA[
+      Spring profile for embedded databases.
+      ]]>
+    </description>
+
+    <!--
+    <jdbc:embedded-database id="businessDataSource">
+      <jdbc:script location="classpath:org/springframework/integration/jdbc/schema-hsqldb.sql" />
+    </jdbc:embedded-database>
+    -->
+  </beans>
+
+  <beans profile="business_manager_mysql">
+    <description>
+      <![CDATA[
+      Spring profile for non-embedded databases.
+      ]]>
+    </description>
+
+    <bean id="businessDataSource"
+          class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+      <description>
+        <![CDATA[
+        Bean which uses the specified driver class to communicate with the underlying persistence/
+        database.
+
+        Simple implementation of the standard JDBC DataSource interface, configuring the plain old
+          JDBC DriverManager via bean properties, and returning a new Connection from every
+          getConnection call.
+        NOTE: This class is not an actual connection pool; it does not actually pool Connections. It
+          just serves as simple replacement for a full-blown connection pool, implementing the same
+          standard interface, but creating new Connections on every call.
+        Useful for test or standalone environments outside of a J2EE container, either as a 
+          DataSource bean in a corresponding ApplicationContext or in conjunction with a simple JNDI
+          environment. Pool-assuming Connection.close() calls will simply close the Connection, so
+          any DataSource-aware persistence code should work.
+        NOTE: Within special class loading environments such as OSGi, this class is effectively
+          superseded by SimpleDriverDataSource due to general class loading issues with the JDBC
+          DriverManager that be resolved through direct Driver usage (which is exactly what
+          SimpleDriverDataSource does).
+        In a J2EE container, it is recommended to use a JNDI DataSource provided by the container.
+          Such a DataSource can be exposed as a DataSource bean in a Spring ApplicationContext via
+          JndiObjectFactoryBean, for seamless switching to and from a local DataSource bean like
+          this class. For tests, you can then either set up a mock JNDI environment through Spring's
+          SimpleNamingContextBuilder, or switch the bean definition to a local DataSource (which is
+          simpler and thus recommended).
+        If you need a "real" connection pool outside of a J2EE container, consider Apache's Jakarta
+          Commons DBCP or C3P0. Commons DBCP's BasicDataSource and C3P0's ComboPooledDataSource are
+          full connection pool beans, supporting the same basic properties as this class plus
+          specific settings (such as minimal/maximal pool size etc).
+        ]]>
+      </description>
+      <property name="driverClassName" value="${business_manager.database.driverClassName:appCtx.database.business_manager.xml_unassigned}" />
+      <property name="url" value="${business_manager.database.url:appCtx.database.business_manager.xml_unassigned}" />
+      <property name="username" value="${business_manager.database.username:appCtx.database.business_manager.xml_unassigned}" />
+      <property name="password" value="${business_manager.database.password:appCtx.database.business_manager.xml_unassigned}" />
+    </bean>
+
+    <!--
+    <jdbc:initialize-database data-source="businessDataSource">
+      <jdbc:script location="classpath:org/springframework/integration/jdbc/schema-mysql.sql" />
+    </jdbc:initialize-database>
+    -->
+  </beans>
+
+</beans>

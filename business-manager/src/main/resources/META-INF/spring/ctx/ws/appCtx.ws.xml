@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:oxm="http://www.springframework.org/schema/oxm"
+       xmlns:sws="http://www.springframework.org/schema/web-services"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+                           http://www.springframework.org/schema/oxm http://www.springframework.org/schema/oxm/spring-oxm-4.0.xsd
+                           http://www.springframework.org/schema/web-services http://www.springframework.org/schema/web-services/web-services-2.0.xsd">
+
+  <description>
+    <![CDATA[
+      Spring components specific to web services.
+      Note that there are other web-service related components defined in other application
+        contexts, for example the SI web service inbound gateway in appCtx.int.xml.
+    ]]>
+  </description>
+
+  <!-- See http://static.springsource.org/spring-ws/site/reference/html/tutorial.html#tutorial-publishing-wsdl.
+       The "../bws/.." is derived from the servlet mapping defined in the web.xml -->
+  <sws:dynamic-wsdl id="business_services"
+                    portTypeName="BusinessServices"
+                    locationUri="/bws/business_services/">
+    <sws:xsd location="classpath:/META-INF/schema/business_manager.xsd" />
+  </sws:dynamic-wsdl>
+
+  <!-- This generates the web service payload output to log files.
+       TODO : Remove on deploy! -->
+  <sws:interceptors>
+    <bean class="org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor" />
+  </sws:interceptors>
+
+</beans>

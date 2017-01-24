@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:context="http://www.springframework.org/schema/context"
+             xmlns:encryption="http://www.jasypt.org/schema/encryption"
+             xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+             xmlns:p="http://www.springframework.org/schema/p"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.jasypt.org/schema/encryption http://www.jasypt.org/schema/encryption/jasypt-spring31-encryption-1.xsd
+                                 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+                                 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+                                 http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd
+                                 http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd">
+
+  <!-- If there are any encrypted values in the properties files the value of the environment
+       var named below will be considered as the decoding password. -->
+  <encryption:encryptor-config id="jConfigBean"
+                               algorithm="PBEWithMD5AndDES"
+                               password-env-name="JASYPT_PWD" />
+
+  <encryption:string-encryptor id="jStringEncryptor"
+                               config-bean="jConfigBean" />
+
+  <!-- Rather than use context:property-placeholder we're allowing encrypted values in the 
+         application properties files.
+       Activates replacement of ${...} placeholders by registering a PropertySourcesPlaceholderConfigurer 
+         within the application context. Properties ... (see rest of tooltip!!) -->
+  <encryption:encryptable-property-placeholder encryptor="jStringEncryptor"
+                                               ignore-resource-not-found="false"
+                                               location="classpath:META-INF/properties/client.properties" />
+
+  <global-method-security pre-post-annotations="enabled">
+    <expression-handler ref="zoonExpressionHandler" />
+  </global-method-security>
+
+  <beans:bean id="zoonExpressionHandler"
+              class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler"
+              autowire="byName" autowire-candidate="false">
+    <beans:property name="permissionEvaluator">
+      <beans:bean class="org.springframework.security.acls.AclPermissionEvaluator">
+        <beans:constructor-arg ref="zoonACLService" />
+      </beans:bean>
+    </beans:property>
+  </beans:bean>
+
+  <http pattern="/resources/**" security="none" />
+
+  <http disable-url-rewriting="true"
+        use-expressions="true">
+    <csrf />
+
+    <access-denied-handler error-page="/error403" />
+
+    <intercept-url pattern="/"
+                   access="permitAll "/>
+    <intercept-url pattern="/about"
+                   access="permitAll" />
+    <intercept-url pattern="/contact"
+                   access="permitAll" />
+    <intercept-url pattern="/privacy"
+                   access="permitAll" />
+    <intercept-url pattern="/user_register"
+                   access="permitAll" />
+    <intercept-url pattern="/manageModules/**"
+                   access="isAuthenticated()" />
+    <intercept-url pattern="/manageWorkflowCalls/**"
+                   access="isAuthenticated()" />
+    <intercept-url pattern="/manageUsers/**"
+                   access="hasRole('ROLE_ADMINISTRATOR')" />
+
+    <form-login login-page="/zoonlogin"
+                default-target-url="/"
+                always-use-default-target="true"
+                authentication-failure-url="/zoonlogin?login_error=" />
+
+    <logout logout-url="/logout"
+            logout-success-url="/" />
+
+  </http>
+
+  <beans:bean id="jdbcUserService"
+              class="org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl"
+              p:dataSource-ref="zoonDataSource" />
+
+  <!--+
+      | Needs to match UserDAOImpl and DatabasePasswordSecurer
+      +-->
+  <beans:bean id="passwordEncoder"
+              class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+
+  <beans:bean id="authenticationProvider"
+              class="org.springframework.security.authentication.dao.DaoAuthenticationProvider"
+              p:userDetailsService-ref="jdbcUserService"
+              p:passwordEncoder-ref="passwordEncoder" />
+
+  <authentication-manager alias="authenticationManager">
+    <authentication-provider ref="authenticationProvider" />
+  </authentication-manager>
+
+  <beans:bean id="zoonLookupStrategy"
+              class="org.springframework.security.acls.jdbc.BasicLookupStrategy">
+    <beans:constructor-arg ref="zoonDataSource" />
+    <beans:constructor-arg ref="zoonAclCache" />
+    <beans:constructor-arg>
+      <beans:bean class="org.springframework.security.acls.domain.AclAuthorizationStrategyImpl">
+        <beans:constructor-arg>
+          <beans:list>
+            <beans:ref bean="adminRole" />
+            <beans:ref bean="adminRole" />
+            <beans:ref bean="adminRole" />
+          </beans:list>
+        </beans:constructor-arg>
+      </beans:bean>
+    </beans:constructor-arg>
+    <beans:constructor-arg>
+      <beans:bean class="org.springframework.security.acls.domain.ConsoleAuditLogger" />
+    </beans:constructor-arg>
+  </beans:bean>
+
+  <beans:bean id="adminRole"
+              class="org.springframework.security.core.authority.SimpleGrantedAuthority">
+    <beans:constructor-arg value="ROLE_ADMIN" />
+  </beans:bean>
+
+  <beans:bean id="zoonAclCache"
+              class="uk.ac.ox.cs.science2020.zoon.client.business.security.NullAclCache" />
+
+  <beans:import resource="appCtx.root-security.database.xml" />
+
+</beans:beans>

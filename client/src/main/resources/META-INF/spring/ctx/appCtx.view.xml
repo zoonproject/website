@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+                           http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+
+  <!-- Sets up a few default Spring beans in support of processing incoming HTTP requests by
+       annotated (e.g. @Controller) MVC Controllers. -->
+  <mvc:annotation-driven />
+
+  <!-- Any requests for javascript or css files (which are the main contents of the resources 
+       folder in the deployed web app) will be considered a resource and will bypass most of the 
+       Spring request processing. -->
+  <mvc:resources location="/resources/" mapping="/resources/**" />
+
+  <bean id="viewJSON"
+        class="org.springframework.web.servlet.view.json.MappingJacksonJsonView">
+    <description>
+      <![CDATA[
+      Makes use of the BeanNameViewResolver.
+      MVC Controllers returning the text "viewJSON" (i.e. bean name!) will have the returned MVC
+        Model converted to JSON format as the response.
+      ]]>
+    </description>
+  </bean>
+
+  <bean id="tilesConfigurer"
+        class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+    <property name="definitions">
+      <list>
+        <value>/WEB-INF/tiles/tiles.xml</value>
+      </list>
+    </property>
+  </bean>
+
+  <bean id="multipartResolver"
+        class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
+        p:maxUploadSize="10000" />
+
+  <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+        p:prefix="/WEB-INF/views/"
+        p:suffix=".jsp"
+        p:order="3">
+    <description>
+      <![CDATA[
+      View resolvers have order priorities, such that the lower the order value the higher the 
+        priority.
+      In our case here, when an MVC Controller returns a View value it'll look for a resolver with
+        that bean name first and if not matched then it'll try for a tile and finally assume that it's
+        an internal resource (jsp page).
+      ]]>
+    </description>
+  </bean>
+
+  <bean id="tilesViewResolver"
+        class="org.springframework.web.servlet.view.tiles3.TilesViewResolver"
+        p:order="2" />
+
+  <bean class="org.springframework.web.servlet.view.BeanNameViewResolver"
+        p:order="1" />
+
+  <!--
+  <bean class="org.springframework.web.servlet.view.ResourceBundleViewResolver"
+        p:basename="views"
+        p:order="0">
+    <description>
+      <![CDATA[
+      Required for at least Excel view handling.
+      Expect to find a file views.properties at the base of the classpath.
+      ]]>
+    </description>
+  </bean>
+  -->
+
+  <bean id="messageSource"
+        class="org.springframework.context.support.ResourceBundleMessageSource"
+        p:defaultEncoding="UTF-8">
+    <property name="basenames">
+      <list>
+        <value>bundle/about</value>
+        <value>bundle/contact</value>
+        <value>bundle/error</value>
+        <value>bundle/general</value>
+        <value>bundle/input</value>
+        <value>bundle/login</value>
+        <value>bundle/module</value>
+        <value>bundle/privacy</value>
+        <value>bundle/profile</value>
+        <value>bundle/user</value>
+        <value>bundle/workflow_call</value>
+      </list>
+    </property>
+  </bean>
+
+  <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+    <property name="defaultErrorView" value="defaultError" />
+    <property name="exceptionMappings">
+      <props>
+        <prop key="java.lang.Exception">error</prop>
+      </props>
+    </property>
+  </bean>
+</beans>

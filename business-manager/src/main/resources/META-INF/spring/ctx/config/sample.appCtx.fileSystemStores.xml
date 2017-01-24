@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
+
+  <description>
+    <![CDATA[
+      Local native file system store(s).
+    ]]>
+  </description>
+
+  <!--
+  <bean id="localFileSystem1"
+        class="uk.ac.ox.cs.science2020.zoon.business_manager.value.object.store.NativeFileSystemVO">
+    <constructor-arg name="location" value="/home/user/ZOON/artifacts/" />
+    <constructor-arg name="storeName" value="Local fs" />
+    <constructor-arg name="hasPublicArtifacts" value="" type="boolean" />
+    <constructor-arg name="temporaryStore" value="false" type="boolean" />
+    <constructor-arg name="zoonStore" value="false" type="boolean" />
+  </bean>
+  -->
+
+</beans>

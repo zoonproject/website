@@ -1,0 +1,872 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:sch="http://www.cs.ox.ac.uk/science2020/zoon/business_manager/ws/1" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.cs.ox.ac.uk/science2020/zoon/business_manager/ws/1" targetNamespace="http://www.cs.ox.ac.uk/science2020/zoon/business_manager/ws/1">
+  <wsdl:types>
+    <xs:schema xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.cs.ox.ac.uk/science2020/zoon/business_manager/ws/1">
+  <xs:annotation>
+    <xs:documentation xml:lang="en">
+      
+      
+    </xs:documentation>
+  </xs:annotation>
+
+  <xs:simpleType final="restriction" name="artifactType">
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="WORKFLOW_CALL"/>
+      <xs:enumeration value="MODULE"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="ArtifactStoreRequest">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        
+        Client request to store an artifact.
+        
+     </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="UserId" type="xs:integer"/>
+        <xs:element name="Artifact" type="xs:string"/>
+        <xs:element name="ArtifactType" type="tns:artifactType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ArtifactStoreResponse">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        
+        Response to client request to store an artifact.
+        
+     </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Outcome" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ModuleTypesRequest">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        
+        Client request for Module types.
+        
+     </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType/>
+  </xs:element>
+
+  <xs:element name="ModuleTypesResponse">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        
+        Client response for Module types.
+        
+     </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="tns:ModuleTypeData"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ModuleTypeData">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        
+        Module type data.
+        
+     </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Name" type="xs:string"/>
+        <xs:element name="Description" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="DeleteModuleRequest">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        
+        Delete the supplied module.
+        
+     </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="UserId" type="xs:int"/>
+        <xs:element name="ModuleName" type="xs:string"/>
+        <xs:element name="ModuleVersion" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="DeleteModuleResponse">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        
+        Result of module deletion request.
+        
+     </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="OutcomeInformation" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="PrivateModulesRequest">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        
+        Client request for a user's private modules.
+        If 'LatestOnly' is not specified or false then all module and versions will be retrieved,
+          otherwise only the most recent versions of modules.
+        The default values for the optional boolean are 'false', i.e. you'll get everything back.
+        
+      </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="UserId" type="xs:integer"/>
+        <xs:element default="false" minOccurs="0" name="LatestOnly" type="xs:boolean"/>
+        <xs:element default="false" minOccurs="0" name="Minimal" type="xs:boolean"/>
+        <xs:element default="false" minOccurs="0" name="VerifiedOnly" type="xs:boolean"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="PrivateModulesResponse">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        
+        Client response for Modules request.
+        
+      </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="tns:NamedModules"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="NamedModules">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        
+        
+     </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="ModuleName" type="xs:string"/>
+        <xs:element name="ModuleType" type="xs:string"/>
+        <xs:element maxOccurs="unbounded" ref="tns:VersionedModuleData"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="VersionedModuleData">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        
+        Versioned Module data element.
+        
+      </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Version" type="xs:string"/>
+        <xs:element maxOccurs="unbounded" ref="tns:ModuleData"/>
+        <xs:element ref="tns:ModuleAdditionalData"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ModuleData">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        
+        Module data element representing data defined within the module.
+        
+      </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" minOccurs="0" ref="tns:MultiValue"/>
+        <xs:element maxOccurs="unbounded" minOccurs="0" ref="tns:SingleValue"/>
+        <xs:element minOccurs="0" ref="tns:Parameters"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="MultiValue">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        
+        Multiple values for a header name, e.g. Author.
+        
+      </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Name" type="xs:string"/>
+        <xs:element maxOccurs="unbounded" name="Values" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="SingleValue">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        
+        Single values for a header name, e.g. the module type.
+        
+      </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Name" type="xs:string"/>
+        <xs:element name="Value" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Parameters">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        
+        Collection of name-value (or rather name-description) pairs for artifact parameters.
+        
+      </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="tns:SingleValue"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ModuleAdditionalData">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        
+        Data which is not actual module data but is informative, e.g. where module can be found.
+        
+      </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Location" type="xs:string"/>
+        <xs:element name="ChangeLog" type="xs:string"/>
+        <xs:element name="Content" type="xs:string"/>
+        <xs:element name="Verified" type="xs:boolean"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ModuleParameters">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        
+        Module data parameters
+        
+      </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="ParameterName" type="xs:string"/>
+        <xs:element minOccurs="0" name="ParameterDescription" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="PrivateWorkflowCallsRequest">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        
+        Client request for private workflow calls.
+        
+      </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="UserId" type="xs:integer"/>
+        <xs:element default="false" minOccurs="0" name="LatestOnly" type="xs:boolean"/>
+        <xs:element default="false" minOccurs="0" name="Minimal" type="xs:boolean"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="PrivateWorkflowCallsResponse">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        
+        Response to request for private workflow calls.
+        
+      </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="tns:NamedWorkflowCalls"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="NamedWorkflowCalls">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        
+        
+     </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="WorkflowCallName" type="xs:string"/>
+        <xs:element maxOccurs="unbounded" ref="tns:VersionedWorkflowCallData"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="VersionedWorkflowCallData">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        
+        Versioned workflow call data element.
+        
+      </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Version" type="xs:string"/>
+        <xs:element name="Text" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ProcessSimulationRequest">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        
+        Client request for simulation.
+        
+      </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Parameter" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ProcessSimulationResponse">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        
+        Response to client request for simulation.
+        
+      </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tns:ProcessSimulationResponseStructure"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ProcessSimulationResponseStructure">
+    <xs:annotation>
+      <xs:documentation>
+        
+        Structure of the simulation response.
+        
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="SimulationId" type="xs:long"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SimulationResultsRequest">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        
+        Client request for simulation results (i.e. Rplots.pdf).
+        
+     </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="SimulationId" type="xs:long"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SimulationResultsResponse">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        
+        Response to client request for simulation results.
+        
+      </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="rplotsPDF" type="xs:base64Binary" xmime:expectedContentTypes="*/*"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="VerifyArtifactRequest">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        
+        Verify the supplied module.
+        
+     </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="UserId" type="xs:int"/>
+        <xs:element name="ArtifactName" type="xs:string"/>
+        <xs:element name="ArtifactVersion" type="xs:string"/>
+        <xs:element name="ArtifactType" type="tns:artifactType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="VerifyArtifactResponse">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        
+        Result of verification request.
+        
+     </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="VerificationIdentifier" type="xs:int"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="VerifyModuleResultsRequest">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        
+        Request for verification results.
+        
+     </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="VerificationIdentifier" type="xs:int"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="VerifyModuleResultsResponse">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        
+        Response to request for verification results.
+        
+     </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="VerificationOutcome" type="xs:boolean"/>
+        <xs:element name="VerificationOutput" type="xs:string">
+          <xs:annotation xml:lang="en">
+            <xs:documentation>
+              
+              The stderr/stdout output of the verification process.
+              
+            </xs:documentation> 
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="VerificationResult" type="xs:string">
+          <xs:annotation xml:lang="en">
+            <xs:documentation>
+              
+              Textual output of the R validation script.
+              
+            </xs:documentation> 
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SaveModuleInZOONStoreRequest">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        
+        Client request to save the specified module in the ZOON store.
+        
+     </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="UserId" type="xs:int"/>
+        <xs:element name="ModuleName" type="xs:string"/>
+        <xs:element name="ModuleVersion" type="xs:string"/>
+        <xs:element name="ModuleType" type="xs:string"/>
+        <xs:element name="RemoveAfterUpload" type="xs:boolean"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SaveModuleInZOONStoreResponse">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        
+        Response to client request for saving module in the ZOON store.
+        
+      </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="ProcessResponse" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SimulationNonResultsRequest">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        
+        Client request for simulation non-results (i.e. input values and output).
+        
+     </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="SimulationId" type="xs:long"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SimulationNonResultsResponse">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        
+        Response to client request for simulation non-results.
+        
+      </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tns:SimulationNonResultsResponseStructure"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SimulationNonResultsResponseStructure">
+    <xs:annotation>
+      <xs:documentation>
+        
+        Structure of the simulation non-results response.
+        
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tns:SimulationStructure"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SimulationStructure">
+    <xs:annotation>
+      <xs:documentation>
+        
+        Structure of the simulation non-results response.
+        
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="id" type="xs:long"/>
+        <xs:element name="output" type="xs:string"/>
+        <xs:element name="parameter" type="xs:string"/>
+        <xs:element name="completed" type="xs:dateTime"/>
+        <xs:element name="persisted" type="xs:dateTime"/>
+        <xs:element name="requestProcessed" type="xs:boolean"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="ModuleTypesResponse">
+    <wsdl:part element="tns:ModuleTypesResponse" name="ModuleTypesResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ModuleTypesRequest">
+    <wsdl:part element="tns:ModuleTypesRequest" name="ModuleTypesRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="SimulationResultsResponse">
+    <wsdl:part element="tns:SimulationResultsResponse" name="SimulationResultsResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="DeleteModuleRequest">
+    <wsdl:part element="tns:DeleteModuleRequest" name="DeleteModuleRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="PrivateModulesResponse">
+    <wsdl:part element="tns:PrivateModulesResponse" name="PrivateModulesResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="VerifyModuleResultsResponse">
+    <wsdl:part element="tns:VerifyModuleResultsResponse" name="VerifyModuleResultsResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="VerifyArtifactRequest">
+    <wsdl:part element="tns:VerifyArtifactRequest" name="VerifyArtifactRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="PrivateWorkflowCallsResponse">
+    <wsdl:part element="tns:PrivateWorkflowCallsResponse" name="PrivateWorkflowCallsResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ArtifactStoreResponse">
+    <wsdl:part element="tns:ArtifactStoreResponse" name="ArtifactStoreResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="SimulationResultsRequest">
+    <wsdl:part element="tns:SimulationResultsRequest" name="SimulationResultsRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="SimulationNonResultsRequest">
+    <wsdl:part element="tns:SimulationNonResultsRequest" name="SimulationNonResultsRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="SaveModuleInZOONStoreResponse">
+    <wsdl:part element="tns:SaveModuleInZOONStoreResponse" name="SaveModuleInZOONStoreResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="PrivateWorkflowCallsRequest">
+    <wsdl:part element="tns:PrivateWorkflowCallsRequest" name="PrivateWorkflowCallsRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="SaveModuleInZOONStoreRequest">
+    <wsdl:part element="tns:SaveModuleInZOONStoreRequest" name="SaveModuleInZOONStoreRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ArtifactStoreRequest">
+    <wsdl:part element="tns:ArtifactStoreRequest" name="ArtifactStoreRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ProcessSimulationResponse">
+    <wsdl:part element="tns:ProcessSimulationResponse" name="ProcessSimulationResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="VerifyModuleResultsRequest">
+    <wsdl:part element="tns:VerifyModuleResultsRequest" name="VerifyModuleResultsRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="SimulationNonResultsResponse">
+    <wsdl:part element="tns:SimulationNonResultsResponse" name="SimulationNonResultsResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="DeleteModuleResponse">
+    <wsdl:part element="tns:DeleteModuleResponse" name="DeleteModuleResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="PrivateModulesRequest">
+    <wsdl:part element="tns:PrivateModulesRequest" name="PrivateModulesRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="VerifyArtifactResponse">
+    <wsdl:part element="tns:VerifyArtifactResponse" name="VerifyArtifactResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ProcessSimulationRequest">
+    <wsdl:part element="tns:ProcessSimulationRequest" name="ProcessSimulationRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="BusinessServices">
+    <wsdl:operation name="ModuleTypes">
+      <wsdl:input message="tns:ModuleTypesRequest" name="ModuleTypesRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:ModuleTypesResponse" name="ModuleTypesResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SimulationResults">
+      <wsdl:input message="tns:SimulationResultsRequest" name="SimulationResultsRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:SimulationResultsResponse" name="SimulationResultsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteModule">
+      <wsdl:input message="tns:DeleteModuleRequest" name="DeleteModuleRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:DeleteModuleResponse" name="DeleteModuleResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PrivateModules">
+      <wsdl:input message="tns:PrivateModulesRequest" name="PrivateModulesRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:PrivateModulesResponse" name="PrivateModulesResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="VerifyModuleResults">
+      <wsdl:input message="tns:VerifyModuleResultsRequest" name="VerifyModuleResultsRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:VerifyModuleResultsResponse" name="VerifyModuleResultsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="VerifyArtifact">
+      <wsdl:input message="tns:VerifyArtifactRequest" name="VerifyArtifactRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:VerifyArtifactResponse" name="VerifyArtifactResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PrivateWorkflowCalls">
+      <wsdl:input message="tns:PrivateWorkflowCallsRequest" name="PrivateWorkflowCallsRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:PrivateWorkflowCallsResponse" name="PrivateWorkflowCallsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ArtifactStore">
+      <wsdl:input message="tns:ArtifactStoreRequest" name="ArtifactStoreRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:ArtifactStoreResponse" name="ArtifactStoreResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SimulationNonResults">
+      <wsdl:input message="tns:SimulationNonResultsRequest" name="SimulationNonResultsRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:SimulationNonResultsResponse" name="SimulationNonResultsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SaveModuleInZOONStore">
+      <wsdl:input message="tns:SaveModuleInZOONStoreRequest" name="SaveModuleInZOONStoreRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:SaveModuleInZOONStoreResponse" name="SaveModuleInZOONStoreResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ProcessSimulation">
+      <wsdl:input message="tns:ProcessSimulationRequest" name="ProcessSimulationRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:ProcessSimulationResponse" name="ProcessSimulationResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BusinessServicesSoap11" type="tns:BusinessServices">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="ModuleTypes">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="ModuleTypesRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="ModuleTypesResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SimulationResults">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="SimulationResultsRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="SimulationResultsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteModule">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="DeleteModuleRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="DeleteModuleResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PrivateModules">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="PrivateModulesRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="PrivateModulesResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="VerifyModuleResults">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="VerifyModuleResultsRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="VerifyModuleResultsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="VerifyArtifact">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="VerifyArtifactRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="VerifyArtifactResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PrivateWorkflowCalls">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="PrivateWorkflowCallsRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="PrivateWorkflowCallsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ArtifactStore">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="ArtifactStoreRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="ArtifactStoreResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SimulationNonResults">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="SimulationNonResultsRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="SimulationNonResultsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SaveModuleInZOONStore">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="SaveModuleInZOONStoreRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="SaveModuleInZOONStoreResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ProcessSimulation">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="ProcessSimulationRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="ProcessSimulationResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="BusinessServicesService">
+    <wsdl:port binding="tns:BusinessServicesSoap11" name="BusinessServicesSoap11">
+      <soap:address location="@business_services.ws.url@"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

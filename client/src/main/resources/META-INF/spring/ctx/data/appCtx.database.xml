@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+                           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+                           http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd
+                           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+  <description>
+    <![CDATA[
+    ZOON client main Spring database-related configuration context.
+    ]]>
+  </description>
+
+  <bean id="zoonSessionFactory"
+        autowire="byName"
+        class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+    <property name="dataSource" ref="zoonDataSource" />
+    <property name="hibernateProperties">
+      <props>
+        <prop key="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</prop>
+        <prop key="net.sf.ehcache.configurationResourceName">/META-INF/data/zoon-ehcache.xml</prop>
+        <!--
+        <prop key="hibernate.cache.provider_configuration_file_resource_path">business_manager-ehcache.xml</prop>
+        -->
+        <prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory</prop>
+        <prop key="hibernate.cache.use_query_cache">true</prop>
+        <prop key="hibernate.cache.use_second_level_cache">true</prop>
+
+        <prop key="hibernate.connection.charSet">utf8</prop>
+        <prop key="hibernate.connection.characterEncoding">utf8</prop>
+        <prop key="hibernate.connection.useUnicode">true</prop>
+
+        <!-- <prop key="hibernate.generate_statistics">true</prop> -->
+        <prop key="hibernate.show_sql">true</prop>
+        <prop key="hibernate.format_sql">true</prop>
+        <!-- validate, update, create, create-drop -->
+        <prop key="hibernate.hbm2ddl.auto">update</prop>
+        <!--
+        <prop key="hibernate.hbm2ddl.import_files">/META-INF/data/spring-security/local/users.sql</prop>
+        -->
+        <prop key="hibernate.c3p0.min_size">5</prop>
+        <prop key="hibernate.c3p0.max_size">20</prop>
+        <prop key="hibernate.c3p0.timeout">100</prop>
+        <prop key="hibernate.c3p0.max_statements">50</prop>
+        <prop key="hibernate.c3p0.idle_test_period">300</prop>
+
+        <prop key="hibernate.jdbc.batch_size">30</prop>
+        <prop key="hibernate.jdbc.fetch_size">30</prop>
+        <prop key="hibernate.default_batch_fetch_size">30</prop>
+        <prop key="hibernate.order_inserts">true</prop>
+        <prop key="hibernate.order_updates">true</prop>
+
+        <prop key="javax.persistence.query.timeout">${zoon.database.queryTimeout}</prop>
+      </props>
+    </property>
+    <property name="packagesToScan">
+      <list>
+        <value>uk.ac.ox.cs.science2020.zoon.client.entity</value>
+      </list>
+    </property>
+  </bean>
+
+  <!-- TODO : Pass passwordEncoder to DatabasePasswordSecurer
+  <bean class="uk.ac.ox.cs.science2020.zoon.client.business.security.DatabasePasswordSecurer"
+        depends-on="zoonSessionFactory"
+        init-method="encodePasswords"
+        p:dataSource-ref="zoonDataSource" />
+  -->
+
+  <bean id="zoonTransactionManager"
+        class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+    <property name="sessionFactory" ref="zoonSessionFactory"></property>
+  </bean>
+
+  <tx:advice id="zoonTXAdvice" transaction-manager="zoonTransactionManager">
+    <tx:attributes>
+      <tx:method name="addUserIdentity" />
+      <tx:method name="deleteUser" />
+      <tx:method name="retrieveNonAdminUserByIdentity" read-only="true" />
+      <tx:method name="retrieveUser" read-only="true" />
+      <tx:method name="retrieveUsers" read-only="true" />
+      <tx:method name="registerUser" />
+      <tx:method name="setEnabled" />
+      <tx:method name="retrieveUsersByUsername" read-only="true" />
+    </tx:attributes>
+  </tx:advice>
+
+  <aop:config>
+    <aop:pointcut id="userManagerPointCut"
+                  expression="execution(* uk.ac.ox.cs.science2020.zoon.client.manager.UserManagerImpl.*(..))" />
+    <aop:advisor advice-ref="zoonTXAdvice" pointcut-ref="userManagerPointCut" />
+  </aop:config>
+
+</beans>

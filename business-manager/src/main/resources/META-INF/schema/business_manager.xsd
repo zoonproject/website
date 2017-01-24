@@ -1,0 +1,610 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="http://www.cs.ox.ac.uk/science2020/zoon/business_manager/ws/1"
+           xmlns:xmime="http://www.w3.org/2005/05/xmlmime"
+           targetNamespace="http://www.cs.ox.ac.uk/science2020/zoon/business_manager/ws/1"
+           elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:documentation xml:lang="en">
+      <![CDATA[
+      ]]>
+    </xs:documentation>
+  </xs:annotation>
+
+  <xs:simpleType name="artifactType" final="restriction" >
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="WORKFLOW_CALL" />
+      <xs:enumeration value="MODULE" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="ArtifactStoreRequest">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        <![CDATA[
+        Client request to store an artifact.
+        ]]>
+     </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="UserId" type="xs:integer" />
+        <xs:element name="Artifact" type="xs:string" />
+        <xs:element name="ArtifactType" type="tns:artifactType" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ArtifactStoreResponse">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        <![CDATA[
+        Response to client request to store an artifact.
+        ]]>
+     </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Outcome" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ModuleTypesRequest">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        <![CDATA[
+        Client request for Module types.
+        ]]>
+     </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType />
+  </xs:element>
+
+  <xs:element name="ModuleTypesResponse">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        <![CDATA[
+        Client response for Module types.
+        ]]>
+     </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tns:ModuleTypeData" maxOccurs="unbounded" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ModuleTypeData">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        <![CDATA[
+        Module type data.
+        ]]>
+     </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Name" type="xs:string" />
+        <xs:element name="Description" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="DeleteModuleRequest">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        <![CDATA[
+        Delete the supplied module.
+        ]]>
+     </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="UserId" type="xs:int" />
+        <xs:element name="ModuleName" type="xs:string" />
+        <xs:element name="ModuleVersion" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="DeleteModuleResponse">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        <![CDATA[
+        Result of module deletion request.
+        ]]>
+     </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="OutcomeInformation" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="PrivateModulesRequest">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        <![CDATA[
+        Client request for a user's private modules.
+        If 'LatestOnly' is not specified or false then all module and versions will be retrieved,
+          otherwise only the most recent versions of modules.
+        The default values for the optional boolean are 'false', i.e. you'll get everything back.
+        ]]>
+      </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="UserId" type="xs:integer" />
+        <xs:element name="LatestOnly" type="xs:boolean" minOccurs="0" default="false" />
+        <xs:element name="Minimal" type="xs:boolean" minOccurs="0" default="false" />
+        <xs:element name="VerifiedOnly" type="xs:boolean" minOccurs="0" default="false" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="PrivateModulesResponse">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        <![CDATA[
+        Client response for Modules request.
+        ]]>
+      </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tns:NamedModules" maxOccurs="unbounded" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="NamedModules">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        <![CDATA[
+        ]]>
+     </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="ModuleName" type="xs:string" />
+        <xs:element name="ModuleType" type="xs:string" />
+        <xs:element ref="tns:VersionedModuleData" maxOccurs="unbounded" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="VersionedModuleData">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        <![CDATA[
+        Versioned Module data element.
+        ]]>
+      </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Version" type="xs:string" />
+        <xs:element ref="tns:ModuleData" maxOccurs="unbounded" />
+        <xs:element ref="tns:ModuleAdditionalData" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ModuleData">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        <![CDATA[
+        Module data element representing data defined within the module.
+        ]]>
+      </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tns:MultiValue" minOccurs="0" maxOccurs="unbounded" />
+        <xs:element ref="tns:SingleValue" minOccurs="0" maxOccurs="unbounded" />
+        <xs:element ref="tns:Parameters" minOccurs="0" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="MultiValue">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        <![CDATA[
+        Multiple values for a header name, e.g. Author.
+        ]]>
+      </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Name" type="xs:string" />
+        <xs:element name="Values" type="xs:string" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="SingleValue">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        <![CDATA[
+        Single values for a header name, e.g. the module type.
+        ]]>
+      </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Name" type="xs:string" />
+        <xs:element name="Value" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Parameters">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        <![CDATA[
+        Collection of name-value (or rather name-description) pairs for artifact parameters.
+        ]]>
+      </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tns:SingleValue" maxOccurs="unbounded" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ModuleAdditionalData">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        <![CDATA[
+        Data which is not actual module data but is informative, e.g. where module can be found.
+        ]]>
+      </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Location" type="xs:string" />
+        <xs:element name="ChangeLog" type="xs:string" />
+        <xs:element name="Content" type="xs:string" />
+        <xs:element name="Verified" type="xs:boolean" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ModuleParameters">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        <![CDATA[
+        Module data parameters
+        ]]>
+      </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="ParameterName" type="xs:string" />
+        <xs:element name="ParameterDescription" type="xs:string" minOccurs="0" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="PrivateWorkflowCallsRequest">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        <![CDATA[
+        Client request for private workflow calls.
+        ]]>
+      </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="UserId" type="xs:integer" />
+        <xs:element name="LatestOnly" type="xs:boolean" minOccurs="0" default="false" />
+        <xs:element name="Minimal" type="xs:boolean" minOccurs="0" default="false" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="PrivateWorkflowCallsResponse">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        <![CDATA[
+        Response to request for private workflow calls.
+        ]]>
+      </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tns:NamedWorkflowCalls" maxOccurs="unbounded" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="NamedWorkflowCalls">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        <![CDATA[
+        ]]>
+     </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="WorkflowCallName" type="xs:string" />
+        <xs:element ref="tns:VersionedWorkflowCallData" maxOccurs="unbounded" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="VersionedWorkflowCallData">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        <![CDATA[
+        Versioned workflow call data element.
+        ]]>
+      </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Version" type="xs:string" />
+        <xs:element name="Text" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ProcessSimulationRequest">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        <![CDATA[
+        Client request for simulation.
+        ]]>
+      </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Parameter" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ProcessSimulationResponse">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        <![CDATA[
+        Response to client request for simulation.
+        ]]>
+      </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tns:ProcessSimulationResponseStructure" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ProcessSimulationResponseStructure">
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[
+        Structure of the simulation response.
+        ]]>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="SimulationId" type="xs:long" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SimulationResultsRequest">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        <![CDATA[
+        Client request for simulation results (i.e. Rplots.pdf).
+        ]]>
+     </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="SimulationId" type="xs:long" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SimulationResultsResponse">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        <![CDATA[
+        Response to client request for simulation results.
+        ]]>
+      </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="rplotsPDF" type="xs:base64Binary" xmime:expectedContentTypes="*/*" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="VerifyArtifactRequest">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        <![CDATA[
+        Verify the supplied module.
+        ]]>
+     </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="UserId" type="xs:int" />
+        <xs:element name="ArtifactName" type="xs:string" />
+        <xs:element name="ArtifactVersion" type="xs:string" />
+        <xs:element name="ArtifactType" type="tns:artifactType" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="VerifyArtifactResponse">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        <![CDATA[
+        Result of verification request.
+        ]]>
+     </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="VerificationIdentifier" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="VerifyModuleResultsRequest">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        <![CDATA[
+        Request for verification results.
+        ]]>
+     </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="VerificationIdentifier" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="VerifyModuleResultsResponse">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        <![CDATA[
+        Response to request for verification results.
+        ]]>
+     </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="VerificationOutcome" type="xs:boolean" />
+        <xs:element name="VerificationOutput" type="xs:string">
+          <xs:annotation xml:lang="en">
+            <xs:documentation>
+              <![CDATA[
+              The stderr/stdout output of the verification process.
+              ]]>
+            </xs:documentation> 
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="VerificationResult" type="xs:string">
+          <xs:annotation xml:lang="en">
+            <xs:documentation>
+              <![CDATA[
+              Textual output of the R validation script.
+              ]]>
+            </xs:documentation> 
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SaveModuleInZOONStoreRequest">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        <![CDATA[
+        Client request to save the specified module in the ZOON store.
+        ]]>
+     </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="UserId" type="xs:int" />
+        <xs:element name="ModuleName" type="xs:string" />
+        <xs:element name="ModuleVersion" type="xs:string" />
+        <xs:element name="ModuleType" type="xs:string" />
+        <xs:element name="RemoveAfterUpload" type="xs:boolean" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SaveModuleInZOONStoreResponse">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        <![CDATA[
+        Response to client request for saving module in the ZOON store.
+        ]]>
+      </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="ProcessResponse" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SimulationNonResultsRequest">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        <![CDATA[
+        Client request for simulation non-results (i.e. input values and output).
+        ]]>
+     </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="SimulationId" type="xs:long" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SimulationNonResultsResponse">
+    <xs:annotation xml:lang="en">
+      <xs:documentation>
+        <![CDATA[
+        Response to client request for simulation non-results.
+        ]]>
+      </xs:documentation> 
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tns:SimulationNonResultsResponseStructure" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SimulationNonResultsResponseStructure">
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[
+        Structure of the simulation non-results response.
+        ]]>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tns:SimulationStructure" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SimulationStructure">
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[
+        Structure of the simulation non-results response.
+        ]]>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="id" type="xs:long" />
+        <xs:element name="output" type="xs:string" />
+        <xs:element name="parameter" type="xs:string" />
+        <xs:element name="completed" type="xs:dateTime" />
+        <xs:element name="persisted" type="xs:dateTime" />
+        <xs:element name="requestProcessed" type="xs:boolean" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

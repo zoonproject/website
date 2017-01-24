@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/integration"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:int-stream="http://www.springframework.org/schema/integration/stream"
+             xmlns:task="http://www.springframework.org/schema/task"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+                                 http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration-4.0.xsd
+                                 http://www.springframework.org/schema/integration/stream http://www.springframework.org/schema/integration/stream/spring-integration-stream-4.0.xsd
+                                 http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.0.xsd">
+
+  <beans:description>
+    <![CDATA[
+    Business manager main SI context for simulation processing.
+    ]]>
+  </beans:description>
+
+  <!-- Initial phase of handling an individual simulation process ++++++++++++++++++++++++++++++ -->
+
+  <channel id="processSimulation_channel_toSimulationHeaderEnricher"
+           datatype="uk.ac.ox.cs.science2020.zoon.business_manager.entity.Simulation" />
+
+  <!-- The gateway to Simulation (rather than request) processing using Spring Integration -->
+  <gateway id="simulationProcessingGateway"
+           service-interface="uk.ac.ox.cs.science2020.zoon.business_manager.business.SimulationProcessingGateway">
+    <!-- Under regular simulation runs there is expected to be no problem replying immediately so
+         timeout is low. -->
+    <method name="regularSimulation"
+            reply-timeout="2000"
+            request-channel="processSimulation_channel_toSimulationHeaderEnricher" />
+  </gateway>
+
+  <!--
+  <channel id="processSimulation_channel_toProgressHeaderEnricherPreFilter"
+           datatype="uk.ac.ox.cs.science2020.zoon.business_manager.entity.Simulation" />
+  -->
+
+  <task:executor id="processSimulation_processingExecutor"
+                 pool-size="4-8"
+                 queue-capacity="10"
+                 keep-alive="120" />
+  <!-- This publish-subscribe channel distributes the simulation to workflow (as defined in imported
+       resources below) -->
+  <publish-subscribe-channel apply-sequence="true"
+                             id="processSimulation_publishsubscribeChannel_toProcessing"
+                             datatype="uk.ac.ox.cs.science2020.zoon.business_manager.entity.Simulation"
+                             task-executor="processSimulation_processingExecutor">
+    <!--
+    <interceptors>
+      <! - - wiretap the channel to update progress information. - - >
+      <wire-tap channel="processSimulation_channel_toProgressHeaderEnricherPreFilter" />
+    </interceptors>
+    -->
+  </publish-subscribe-channel>
+
+  <!-- Update the message header to include the simulation identifier. -->
+  <header-enricher id="processSimulation_simulationIdHeaderEnricher"
+                   input-channel="processSimulation_channel_toSimulationHeaderEnricher"
+                   output-channel="processSimulation_publishsubscribeChannel_toProcessing">
+    <header name="#{T(uk.ac.ox.cs.science2020.zoon.business_manager.BusinessIdentifiers).SI_HDR_SIMULATION_ID}"
+            expression="payload.id" />
+  </header-enricher>
+
+  <channel id="processSimulation_channel_toPostWorkflowProcessing"
+           datatype="uk.ac.ox.cs.science2020.zoon.business_manager.entity.Simulation" />
+
+  <beans:import resource="appCtx.sim.processWorkflow.xml" />
+
+  <int-stream:stdout-channel-adapter id="processSimulation_channel_toPostWorkflowProcessing" />
+
+</beans:beans>

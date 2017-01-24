@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration PUBLIC "-//APACHE//DTD LOG4J 1.2//EN" "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+  <appender name="console" class="org.apache.log4j.ConsoleAppender">
+    <param name="Target" value="System.out" />
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="%-5p: %c - %m%n" />
+    </layout>
+  </appender>
+
+  <appender name="file" class="org.apache.log4j.RollingFileAppender">
+    <param name="File" value="${log.file.client}" />
+    <param name="Append" value="true" />
+    <param name="MaxBackupIndex" value="5" />
+    <param name="MaxFileSize" value="10000KB" />
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="%d{DATE} %-5p %-15c{1}: %m%n"/>
+    </layout>
+  </appender>
+
+  <logger name="org.springframework.ws.client.MessageTracing" additivity="false">
+    <level value="trace" />
+    <appender-ref ref="file" />
+  </logger>
+  <logger name="org.springframework.ws.server.MessageTracing" additivity="false">
+    <level value="trace" />
+    <appender-ref ref="file" />
+  </logger>
+
+  <logger name="uk.ac.ox.cs.science2020.zoon.business_manager" additivity="false">
+    <level value="${log.level.client}" />
+    <appender-ref ref="file" />
+  </logger>
+
+  <root>
+    <priority value="${log.level.general}" />
+    <appender-ref ref="file" />
+  </root>
+</log4j:configuration>

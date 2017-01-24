@@ -1,0 +1,212 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <relativePath>../zoon-shared/pom.xml</relativePath>
+    <groupId>uk.ac.ox.cs.science2020.zoon</groupId>
+    <artifactId>parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>business-manager</artifactId>
+  <packaging>war</packaging>
+
+  <repositories>
+    <repository>
+      <id>com.gitblit</id>
+      <name>Gitblit</name>
+      <url>http://gitblit.github.io/gitblit-maven/</url>
+      <layout>default</layout>
+    </repository>
+  </repositories>
+
+  <properties>
+    <org.apache.commons.vfs2-version>2.0</org.apache.commons.vfs2-version>
+    <org.springframework.integration-version>4.0.8.RELEASE</org.springframework.integration-version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.easymock</groupId>
+      <artifactId>easymock</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>uk.ac.ox.cs.science2020.zoon</groupId>
+      <artifactId>zoon-shared</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.gitblit</groupId>
+      <artifactId>gbapi</artifactId>
+      <version>1.6.2</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-codec</groupId>
+      <artifactId>commons-codec</artifactId>
+      <version>1.10</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>4.5.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-vfs2</artifactId>
+      <version>${org.apache.commons.vfs2-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jgit</groupId>
+      <artifactId>org.eclipse.jgit</artifactId>
+      <version>4.0.1.201506240215-r</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.mylyn.github</groupId>
+      <artifactId>org.eclipse.egit.github.core</artifactId>
+      <version>2.1.5</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-jms</artifactId>
+      <version>${org.springframework-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.integration</groupId>
+      <artifactId>spring-integration-file</artifactId>
+      <version>${org.springframework.integration-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.integration</groupId>
+      <artifactId>spring-integration-jdbc</artifactId>
+      <version>${org.springframework.integration-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.integration</groupId>
+      <artifactId>spring-integration-jms</artifactId>
+      <version>${org.springframework.integration-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.integration</groupId>
+      <artifactId>spring-integration-jpa</artifactId>
+      <version>${org.springframework.integration-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.integration</groupId>
+      <artifactId>spring-integration-stream</artifactId>
+      <version>${org.springframework.integration-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.integration</groupId>
+      <artifactId>spring-integration-ws</artifactId>
+      <version>${org.springframework.integration-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-core</artifactId>
+      <version>${org.springframework.security.core-version}</version>
+    </dependency>
+  </dependencies>
+
+  <profiles>
+    <profile>
+      <id>mvn-dev-profile</id>
+      <build>
+        <!--
+        <filters>
+          <filter>src/properties/database/dev.database.${db.vendor}.properties</filter>
+        </filters>
+        <testResources>
+          <testResource>
+            <directory>src/test/resources</directory>
+            <filtering>true</filtering>
+          </testResource>
+        </testResources>
+        -->
+      </build>
+    </profile>
+  </profiles>
+
+  <build>
+    <filters>
+      <!-- The following copy the (non-Spring) property values into xml files on maven build.  -->
+      <filter>src/properties/filter.properties</filter>
+      <filter>src/properties/database/database.filter.properties</filter>
+    </filters>
+
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.6</version>
+        <executions>
+          <execution>
+            <id>create_database_properties</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <target>
+                <!-- The following file is used by spring's context:property-placeholder
+                     for assigning property values on application start-up. -->
+                <concat destfile="src/main/resources/META-INF/properties/business_manager.properties"
+                        fixlastline="yes">
+                  <fileset dir="src/properties/" includes="spring.properties" />
+                  <fileset dir="src/properties/database/" includes="${deploy.env}.database.${deploy.db_vendor}.properties" />
+                </concat>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <!-- Build the Java classes from the business manager .xsd file -->
+        <groupId>org.jvnet.jaxb2.maven2</groupId>
+        <artifactId>maven-jaxb2-plugin</artifactId>
+        <version>0.8.2</version>
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <generateDirectory>src/main/java</generateDirectory>
+          <!-- Package is referenced in appCtx.int.xml (for JAXB marshalling purposes) -->
+          <generatePackage>uk.ac.ox.cs.science2020.zoon.business_manager.ws.schema.jaxb</generatePackage>
+          <schemaDirectory>src/main/resources/META-INF/schema</schemaDirectory>
+          <includeSchemas>
+            <includeSchema>business_manager.xsd</includeSchema>
+          </includeSchemas>
+          <strict>true</strict>
+          <cleanPackageDirectories>true</cleanPackageDirectories>
+          <verbose>true</verbose>
+          <episode>false</episode>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>

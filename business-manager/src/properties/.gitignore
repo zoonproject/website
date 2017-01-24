@@ -1,0 +1,4 @@
+/*.properties
+!/sample.*
+/database/*
+!/database/sample*

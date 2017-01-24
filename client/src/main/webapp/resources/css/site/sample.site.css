@@ -1,0 +1,58 @@
+/*
+ * These are generally coloured and font artifacts.
+ * Positional styles are in client_direct.css
+ */
+
+a { color: #002147; }
+a:link { color: #002147; }
+a:active { color: #002147; }
+a:visited { color: #406187; }
+a:hover, a:focus { color: #03f; }
+.error { color: #f00; }
+.error_text { color: #f00; }
+/*
+.error_text {
+  margin: 2px;
+  padding: 2px;
+  border: solid steelblue 1px;
+  letter-spacing: 1px;
+  font-weight: bold;
+}
+*/
+.input_division {
+  color: #777;
+  background-color: #ddd;
+  padding : 4px;
+  text-shadow: 2px 2px 2px #999;
+}
+.input_highlighted {
+  background-color: #bbf;
+  padding: 4px;
+}
+.message_text {
+  margin: 2px;
+  padding: 2px;
+  border: solid steelblue 1px;
+  letter-spacing: 1px;
+}
+.module_info {
+  background-color: #eee;
+  border: solid steelblue 1px;
+  margin: 10px;
+  padding: 5px;
+  width: 300px;
+}
+.shadow_1 {
+  box-shadow: -1px -1px 5px rgba(50, 50, 50, 0.75);
+  transition: all 0.8s ease;
+}
+.shadow_2 {
+  box-shadow: -1px -1px 8px rgba(50, 50, 50, 0.75);
+}
+.shadowed {
+  margin-top: 10px;
+  padding: 3px;
+  -moz-box-shadow:    3px 3px 3px 3px #ddd;
+  -webkit-box-shadow: 3px 3px 3px 3px #ddd;
+  box-shadow:         3px 3px 3px 3px #ddd;
+}
