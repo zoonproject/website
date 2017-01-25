@@ -89,17 +89,7 @@
     </dependency>
     <dependency>
       <groupId>org.springframework.integration</groupId>
-      <artifactId>spring-integration-jdbc</artifactId>
-      <version>${org.springframework.integration-version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.integration</groupId>
       <artifactId>spring-integration-jms</artifactId>
-      <version>${org.springframework.integration-version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.integration</groupId>
-      <artifactId>spring-integration-jpa</artifactId>
       <version>${org.springframework.integration-version}</version>
     </dependency>
     <dependency>
@@ -119,30 +109,10 @@
     </dependency>
   </dependencies>
 
-  <profiles>
-    <profile>
-      <id>mvn-dev-profile</id>
-      <build>
-        <!--
-        <filters>
-          <filter>src/properties/database/dev.database.${db.vendor}.properties</filter>
-        </filters>
-        <testResources>
-          <testResource>
-            <directory>src/test/resources</directory>
-            <filtering>true</filtering>
-          </testResource>
-        </testResources>
-        -->
-      </build>
-    </profile>
-  </profiles>
-
   <build>
     <filters>
       <!-- The following copy the (non-Spring) property values into xml files on maven build.  -->
       <filter>src/properties/filter.properties</filter>
-      <filter>src/properties/database/database.filter.properties</filter>
     </filters>
 
     <resources>
@@ -171,7 +141,6 @@
                 <concat destfile="src/main/resources/META-INF/properties/business_manager.properties"
                         fixlastline="yes">
                   <fileset dir="src/properties/" includes="spring.properties" />
-                  <fileset dir="src/properties/database/" includes="${deploy.env}.database.${deploy.db_vendor}.properties" />
                 </concat>
               </target>
             </configuration>

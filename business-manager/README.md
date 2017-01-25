@@ -10,7 +10,6 @@ This component is specific to the "logic" and "data" operations of a typical mul
    repository.
  * Persisting public ZOON module and workflow call data in an [Elasticsearch](http://www.elastic.co/ "Elasticsearch home")
    database.
- * [Deprecated] Persisting simulation output in a database.
 
 ## Installation
 

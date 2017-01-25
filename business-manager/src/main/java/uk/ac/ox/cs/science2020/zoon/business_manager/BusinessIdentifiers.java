@@ -71,14 +71,6 @@ public class BusinessIdentifiers {
   public static final String COMPONENT_PARSE_PROCESS_MONITOR = "parseProcessMonitor";
   /** Component name for process monitor */
   public static final String COMPONENT_PROCESS_MONITOR = "processMonitor";
-  /** Component - Simulation DAO. */
-  public static final String COMPONENT_SIMULATION_DAO = "simulationDAOImpl";
-  /** Component - Simulation manager. */
-  public static final String COMPONENT_SIMULATION_MANAGER = "simulationManagerImpl";
-  /** Component - Simulation processing gateway */
-  public static final String COMPONENT_SIMULATION_PROCESSING_GATEWAY = "simulationProcessingGateway";
-  /** Component - Simulation service. */
-  public static final String COMPONENT_SIMULATION_SERVICE = "simulationServiceImpl";
   /** Component - Web service inbound gateway. */
   public static final String COMPONENT_WS_INBOUND_GATEWAY = "wsInboundGateway";
   /** Component - Verification file monitor. */

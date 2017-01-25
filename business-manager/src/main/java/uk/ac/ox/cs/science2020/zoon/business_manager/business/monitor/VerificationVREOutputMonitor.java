@@ -153,7 +153,7 @@ public class VerificationVREOutputMonitor {
 
   public void setSchedule(final String monitorFrequency) {
     // Delay output monitoring by a second after the process monitor starts
-    this.daemonTimer.schedule(new QueryTask(), ProcessMonitor.PROCESS_MONITOR_DELAY + 1000,
+    this.daemonTimer.schedule(new QueryTask(), VerificationProcessMonitor.PROCESS_MONITOR_DELAY + 1000,
                               new Integer(monitorFrequency) * 1000);
   }
 

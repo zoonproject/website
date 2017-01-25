@@ -164,7 +164,7 @@ public class ParseVREOutputMonitor {
 
   public void setSchedule(final String monitorFrequency) {
     // Delay output monitoring by half a second after the process monitor starts
-    this.daemonTimer.schedule(new QueryTask(), ProcessMonitor.PROCESS_MONITOR_DELAY + 500,
+    this.daemonTimer.schedule(new QueryTask(), ParseProcessMonitor.PROCESS_MONITOR_DELAY + 500,
                               new Long(monitorFrequency));
   }
 

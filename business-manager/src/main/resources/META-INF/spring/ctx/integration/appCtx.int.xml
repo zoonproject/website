@@ -54,14 +54,8 @@
            datatype="uk.ac.ox.cs.science2020.zoon.business_manager.ws.schema.jaxb.PrivateModulesRequest" />
   <channel id="channel_toPrivateWorkflowCallsRequestProcessor"
            datatype="uk.ac.ox.cs.science2020.zoon.business_manager.ws.schema.jaxb.PrivateWorkflowCallsRequest" />
-  <channel id="channel_toSimulationRequestProcessor"
-           datatype="uk.ac.ox.cs.science2020.zoon.business_manager.ws.schema.jaxb.ProcessSimulationRequest" />
   <channel id="channel_toSaveModuleInZOONStoreRequest"
            datatype="uk.ac.ox.cs.science2020.zoon.business_manager.ws.schema.jaxb.SaveModuleInZOONStoreRequest" />
-  <channel id="channel_toSimulationNonResultsRequestProcessor"
-           datatype="uk.ac.ox.cs.science2020.zoon.business_manager.ws.schema.jaxb.SimulationNonResultsRequest" />
-  <channel id="channel_toSimulationResultsRequestProcessor"
-           datatype="uk.ac.ox.cs.science2020.zoon.business_manager.ws.schema.jaxb.SimulationResultsRequest" />
   <channel id="channel_toArtifactVerificationRequestProcessor"
            datatype="uk.ac.ox.cs.science2020.zoon.business_manager.ws.schema.jaxb.VerifyArtifactRequest" />
   <channel id="channel_toModuleVerificationResultsRequestProcessor"
@@ -81,14 +75,8 @@
              channel="channel_toPrivateModulesRequestProcessor" />
     <mapping type="uk.ac.ox.cs.science2020.zoon.business_manager.ws.schema.jaxb.PrivateWorkflowCallsRequest"
              channel="channel_toPrivateWorkflowCallsRequestProcessor" />
-    <mapping type="uk.ac.ox.cs.science2020.zoon.business_manager.ws.schema.jaxb.ProcessSimulationRequest"
-             channel="channel_toSimulationRequestProcessor" />
     <mapping type="uk.ac.ox.cs.science2020.zoon.business_manager.ws.schema.jaxb.SaveModuleInZOONStoreRequest"
              channel="channel_toSaveModuleInZOONStoreRequest" />
-    <mapping type="uk.ac.ox.cs.science2020.zoon.business_manager.ws.schema.jaxb.SimulationNonResultsRequest"
-             channel="channel_toSimulationNonResultsRequestProcessor" />
-    <mapping type="uk.ac.ox.cs.science2020.zoon.business_manager.ws.schema.jaxb.SimulationResultsRequest"
-             channel="channel_toSimulationResultsRequestProcessor" />
     <mapping type="uk.ac.ox.cs.science2020.zoon.business_manager.ws.schema.jaxb.VerifyArtifactRequest"
              channel="channel_toArtifactVerificationRequestProcessor" />
     <mapping type="uk.ac.ox.cs.science2020.zoon.business_manager.ws.schema.jaxb.VerifyModuleResultsRequest"
@@ -130,25 +118,6 @@
                      method="retrievePrivateWorkflowCalls"
                      ref="workflowCallsRequestProcessor" />
 
-  <service-activator id="simulationRequestProcessor"
-                     input-channel="channel_toSimulationRequestProcessor"
-                     method="processSimulationRequest">
-    <beans:bean class="uk.ac.ox.cs.science2020.zoon.business_manager.ws.business_manager.SimulationRequestProcessor" />
-  </service-activator>
-  <service-activator id="simulationNonResultRequestProcessor"
-                     input-channel="channel_toSimulationNonResultsRequestProcessor"
-                     method="processSimulationNonResultsRequest">
-    <beans:bean class="uk.ac.ox.cs.science2020.zoon.business_manager.ws.business_manager.SimulationNonResultsRequestProcessor" />
-  </service-activator>
-  <service-activator id="simulationResultRequestProcessor"
-                     input-channel="channel_toSimulationResultsRequestProcessor"
-                     method="processSimulationResultsRequest">
-    <beans:bean class="uk.ac.ox.cs.science2020.zoon.business_manager.ws.business_manager.SimulationResultsRequestProcessor" />
-  </service-activator>
-
   <beans:import resource="parsing/appCtx.modules.xml" />
-  <beans:import resource="simulation/appCtx.sim.processRequest.xml" />
-  <beans:import resource="simulation/appCtx.sim.processSimulation.xml" />
-  <beans:import resource="simulation/appCtx.sim.monitoring.xml" />
 
 </beans:beans>
