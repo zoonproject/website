@@ -349,81 +349,6 @@
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="ProcessSimulationRequest">
-    <xs:annotation xml:lang="en">
-      <xs:documentation>
-        
-        Client request for simulation.
-        
-      </xs:documentation> 
-    </xs:annotation>
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element name="Parameter" type="xs:string"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-
-  <xs:element name="ProcessSimulationResponse">
-    <xs:annotation xml:lang="en">
-      <xs:documentation>
-        
-        Response to client request for simulation.
-        
-      </xs:documentation> 
-    </xs:annotation>
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="tns:ProcessSimulationResponseStructure"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-
-  <xs:element name="ProcessSimulationResponseStructure">
-    <xs:annotation>
-      <xs:documentation>
-        
-        Structure of the simulation response.
-        
-      </xs:documentation>
-    </xs:annotation>
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element name="SimulationId" type="xs:long"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-
-  <xs:element name="SimulationResultsRequest">
-    <xs:annotation xml:lang="en">
-      <xs:documentation>
-        
-        Client request for simulation results (i.e. Rplots.pdf).
-        
-     </xs:documentation> 
-    </xs:annotation>
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element name="SimulationId" type="xs:long"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-
-  <xs:element name="SimulationResultsResponse">
-    <xs:annotation xml:lang="en">
-      <xs:documentation>
-        
-        Response to client request for simulation results.
-        
-      </xs:documentation> 
-    </xs:annotation>
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element name="rplotsPDF" type="xs:base64Binary" xmime:expectedContentTypes="*/*"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-
   <xs:element name="VerifyArtifactRequest">
     <xs:annotation xml:lang="en">
       <xs:documentation>
@@ -539,71 +464,6 @@
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="SimulationNonResultsRequest">
-    <xs:annotation xml:lang="en">
-      <xs:documentation>
-        
-        Client request for simulation non-results (i.e. input values and output).
-        
-     </xs:documentation> 
-    </xs:annotation>
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element name="SimulationId" type="xs:long"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-
-  <xs:element name="SimulationNonResultsResponse">
-    <xs:annotation xml:lang="en">
-      <xs:documentation>
-        
-        Response to client request for simulation non-results.
-        
-      </xs:documentation> 
-    </xs:annotation>
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="tns:SimulationNonResultsResponseStructure"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-
-  <xs:element name="SimulationNonResultsResponseStructure">
-    <xs:annotation>
-      <xs:documentation>
-        
-        Structure of the simulation non-results response.
-        
-      </xs:documentation>
-    </xs:annotation>
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="tns:SimulationStructure"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-
-  <xs:element name="SimulationStructure">
-    <xs:annotation>
-      <xs:documentation>
-        
-        Structure of the simulation non-results response.
-        
-      </xs:documentation>
-    </xs:annotation>
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element name="id" type="xs:long"/>
-        <xs:element name="output" type="xs:string"/>
-        <xs:element name="parameter" type="xs:string"/>
-        <xs:element name="completed" type="xs:dateTime"/>
-        <xs:element name="persisted" type="xs:dateTime"/>
-        <xs:element name="requestProcessed" type="xs:boolean"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-
 </xs:schema>
   </wsdl:types>
   <wsdl:message name="ModuleTypesResponse">
@@ -612,10 +472,6 @@
   </wsdl:message>
   <wsdl:message name="ModuleTypesRequest">
     <wsdl:part element="tns:ModuleTypesRequest" name="ModuleTypesRequest">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="SimulationResultsResponse">
-    <wsdl:part element="tns:SimulationResultsResponse" name="SimulationResultsResponse">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="DeleteModuleRequest">
@@ -630,24 +486,16 @@
     <wsdl:part element="tns:VerifyModuleResultsResponse" name="VerifyModuleResultsResponse">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="VerifyArtifactRequest">
-    <wsdl:part element="tns:VerifyArtifactRequest" name="VerifyArtifactRequest">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="PrivateWorkflowCallsResponse">
     <wsdl:part element="tns:PrivateWorkflowCallsResponse" name="PrivateWorkflowCallsResponse">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="VerifyArtifactRequest">
+    <wsdl:part element="tns:VerifyArtifactRequest" name="VerifyArtifactRequest">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="ArtifactStoreResponse">
     <wsdl:part element="tns:ArtifactStoreResponse" name="ArtifactStoreResponse">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="SimulationResultsRequest">
-    <wsdl:part element="tns:SimulationResultsRequest" name="SimulationResultsRequest">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="SimulationNonResultsRequest">
-    <wsdl:part element="tns:SimulationNonResultsRequest" name="SimulationNonResultsRequest">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="SaveModuleInZOONStoreResponse">
@@ -666,16 +514,8 @@
     <wsdl:part element="tns:ArtifactStoreRequest" name="ArtifactStoreRequest">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="ProcessSimulationResponse">
-    <wsdl:part element="tns:ProcessSimulationResponse" name="ProcessSimulationResponse">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="VerifyModuleResultsRequest">
     <wsdl:part element="tns:VerifyModuleResultsRequest" name="VerifyModuleResultsRequest">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="SimulationNonResultsResponse">
-    <wsdl:part element="tns:SimulationNonResultsResponse" name="SimulationNonResultsResponse">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="DeleteModuleResponse">
@@ -690,21 +530,11 @@
     <wsdl:part element="tns:VerifyArtifactResponse" name="VerifyArtifactResponse">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="ProcessSimulationRequest">
-    <wsdl:part element="tns:ProcessSimulationRequest" name="ProcessSimulationRequest">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:portType name="BusinessServices">
     <wsdl:operation name="ModuleTypes">
       <wsdl:input message="tns:ModuleTypesRequest" name="ModuleTypesRequest">
     </wsdl:input>
       <wsdl:output message="tns:ModuleTypesResponse" name="ModuleTypesResponse">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="SimulationResults">
-      <wsdl:input message="tns:SimulationResultsRequest" name="SimulationResultsRequest">
-    </wsdl:input>
-      <wsdl:output message="tns:SimulationResultsResponse" name="SimulationResultsResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="DeleteModule">
@@ -725,16 +555,16 @@
       <wsdl:output message="tns:VerifyModuleResultsResponse" name="VerifyModuleResultsResponse">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="VerifyArtifact">
-      <wsdl:input message="tns:VerifyArtifactRequest" name="VerifyArtifactRequest">
-    </wsdl:input>
-      <wsdl:output message="tns:VerifyArtifactResponse" name="VerifyArtifactResponse">
-    </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="PrivateWorkflowCalls">
       <wsdl:input message="tns:PrivateWorkflowCallsRequest" name="PrivateWorkflowCallsRequest">
     </wsdl:input>
       <wsdl:output message="tns:PrivateWorkflowCallsResponse" name="PrivateWorkflowCallsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="VerifyArtifact">
+      <wsdl:input message="tns:VerifyArtifactRequest" name="VerifyArtifactRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:VerifyArtifactResponse" name="VerifyArtifactResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="ArtifactStore">
@@ -743,22 +573,10 @@
       <wsdl:output message="tns:ArtifactStoreResponse" name="ArtifactStoreResponse">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="SimulationNonResults">
-      <wsdl:input message="tns:SimulationNonResultsRequest" name="SimulationNonResultsRequest">
-    </wsdl:input>
-      <wsdl:output message="tns:SimulationNonResultsResponse" name="SimulationNonResultsResponse">
-    </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="SaveModuleInZOONStore">
       <wsdl:input message="tns:SaveModuleInZOONStoreRequest" name="SaveModuleInZOONStoreRequest">
     </wsdl:input>
       <wsdl:output message="tns:SaveModuleInZOONStoreResponse" name="SaveModuleInZOONStoreResponse">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="ProcessSimulation">
-      <wsdl:input message="tns:ProcessSimulationRequest" name="ProcessSimulationRequest">
-    </wsdl:input>
-      <wsdl:output message="tns:ProcessSimulationResponse" name="ProcessSimulationResponse">
     </wsdl:output>
     </wsdl:operation>
   </wsdl:portType>
@@ -770,15 +588,6 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="ModuleTypesResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="SimulationResults">
-      <soap:operation soapAction=""/>
-      <wsdl:input name="SimulationResultsRequest">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="SimulationResultsResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
@@ -809,21 +618,21 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="VerifyArtifact">
-      <soap:operation soapAction=""/>
-      <wsdl:input name="VerifyArtifactRequest">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="VerifyArtifactResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="PrivateWorkflowCalls">
       <soap:operation soapAction=""/>
       <wsdl:input name="PrivateWorkflowCallsRequest">
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="PrivateWorkflowCallsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="VerifyArtifact">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="VerifyArtifactRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="VerifyArtifactResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
@@ -836,30 +645,12 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="SimulationNonResults">
-      <soap:operation soapAction=""/>
-      <wsdl:input name="SimulationNonResultsRequest">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="SimulationNonResultsResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="SaveModuleInZOONStore">
       <soap:operation soapAction=""/>
       <wsdl:input name="SaveModuleInZOONStoreRequest">
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="SaveModuleInZOONStoreResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="ProcessSimulation">
-      <soap:operation soapAction=""/>
-      <wsdl:input name="ProcessSimulationRequest">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="ProcessSimulationResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
