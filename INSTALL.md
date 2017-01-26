@@ -1,16 +1,16 @@
 # ZOON demo web interface installation
 
-**Warning! `business-manager` and `client` lack sufficient documentation**
+**Warning! `business-manager` and `client` have partially complete documentation**
 
 ## Requirements
 
  * [Java JDK (vers. 7+)](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html "Oracle downloads") (build, deploy)
  * [Maven](https://maven.apache.org/ "Maven") (build)
  * Java servlet container, e.g. [Apache Tomcat](https://tomcat.apache.org/ "Tomcat home"). (deploy)
- * Database, e.g. [MySQL](https://dev.mysql.com/downloads/mysql/ "MySQL downloads") (deploy).
  * [Elasticsearch](http://www.elastic.co/ "Elasticsearch home") (currently using vers. 1.4.4) (deploy)
  * [Gitblit](http://www.gitblit.com/ "Gitblit home") (currently using vers. 1.7.1) (deploy)
  * [R](https://www.r-project.org/ "R home") **at least vers. 3.2.4 and with `zoon` and `testthat` packages installed** (deploy)
+ * (optional) Database, e.g. [MySQL](https://dev.mysql.com/downloads/mysql/ "MySQL downloads") (deploy).
 
 ## Instructions
 

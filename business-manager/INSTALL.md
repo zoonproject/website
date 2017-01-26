@@ -1,6 +1,6 @@
 # ZOON -- `business-manager` -- Installation Instructions
 
-**Warning! Incomplete documentation**
+**Warning! Partially complete documentation**
 
 ## Requirements - Install the following before proceeding!
 
@@ -40,7 +40,8 @@ Download the project source and go to this application's root directory (i.e. th
  * `elasticsearch.cluster-nodes=`  
    Location of elastic cluster nodes, e.g 127.0.0.1:9300
  * `processors.limit=`  
-   Maximum number of processor to use concurrently, e.g. 6
+   Maximum number of processor to use concurrently, e.g. 6.  
+   (**NOTE:** Seems to have problems if set to physical number of available processors!?)
  * `log.file.business_manager=`  
    Log file name/location, e.g. logs/zoon-business-manager.log
  * `log.level.business_manager=`  
@@ -99,7 +100,7 @@ Edit this file if you intend to use a local filesystem directory as a store of Z
 perhaps a git clone of https://github.com/zoonproject/modules  which is used for module parsing on
 component start-up.
 
-See [Start-up problems](#start-up-problems) for some heads-up info.
+See [Start up problems](#start-up-problems) for some heads-up info.
 
  * `location`  
    Local directory holding ZOON modules, e.g. /home/me/git/modules/R/
@@ -166,12 +167,12 @@ See [Start-up problems](#start-up-problems) for some heads-up info.
    Indicator as to whether to publish private ZOON modules to this store, e.g. `true` if using as
    an example public ZOON module upload store.
 
-### Installation 3: The `bash` script files.
+### Installation 3: The ZOON module R files and `bash` script files
 
 The `tools` directory contains a plethora of R and script files which prepare and run R invocations
 on the command line.
 
-#### Tom's R modules.
+#### Tom's ZOON R modules.
 
  * ZOON module parsing  
   `module2json.R`  
@@ -182,30 +183,28 @@ on the command line.
 
 #### Bash preparation and invocation scripts.
 
-**ALL these files require modification**
+Probably only `parse_prepare.sh`, `verify_prepare.sh` and `Rscript.sh` will need modification!
 
- * ZOON module parsing  
-   `parse_prepare.sh`  
+ * `parse_prepare.sh`  
    Create symlinks to the necessary files used to run the parsing R module in a target directory.  
-   `parse_runner.sh`  
+ * `parse_runner.sh`  
    R parsing invocation and system process id data file placing script.  
    So long as there are the appropriate system access and invocation permissions, if something fails
    then useful debug information is written by this script.
- * ZOON module verification  
-   `verify_prepare.sh`  
+ * `verify_prepare.sh`  
    Creates symlinks to the necessary files used to run the verifying R module in a target directory.
-   `verify_runner.sh`  
+ * `verify_runner.sh`  
    R verifying invocation and system process id data file placing script.  
    So long as there are the appropriate system access and invocation permissions, if something fails
    then useful information debug is written by this script.
  * `Rscript.sh`  
    This is a wrapper to the `xvfb-run` command.
 
-### Installation 3: Building the `business-manager` war file. 
+### Installation 4: Building the `business-manager` war file. 
 
- 1. `mvn clean verify
+ 1. `mvn clean verify`
 
-### Installation 4. Deploy into the Java servlet container.
+### Installation 5. Deploy into the Java servlet container.
 
  1. If the building of the `.war` file was successful then there should be a `.war` file in the
     `target/` directory for deployment to the Java servlet container.
