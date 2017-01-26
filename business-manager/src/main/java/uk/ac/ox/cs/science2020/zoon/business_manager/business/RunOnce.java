@@ -368,7 +368,7 @@ public class RunOnce implements ApplicationListener<ContextRefreshedEvent> {
     final HttpClient client = HttpClientBuilder.create().build();
     final HttpPost request = new HttpPost(figshareAPI);
     //request.setHeader("Content-Type", "application/json");
-    final String json = "{ \"search_for\": \":tag: ".concat(figshareSearchForTag).concat("\" }");
+    final String json = "{ \"search_for\": \"".concat(figshareSearchForTag).concat("\" }");
     HttpEntity entity = null;
     try {
       entity = new ByteArrayEntity(json.getBytes("UTF-8"));
@@ -381,6 +381,7 @@ public class RunOnce implements ApplicationListener<ContextRefreshedEvent> {
 
     request.setEntity(entity);
 
+    // e.g. curl "https://api.figshare.com/v2/articles/search" -d '{ "search_for": "zoonWorkflow"}'
     final String response = processRequest(client, request);
     if (response == null) {
       return;
