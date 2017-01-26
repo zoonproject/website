@@ -69,7 +69,7 @@ public class ZOONVerify implements ApplicationContextAware {
 
   public static final String VERIFICATION_SCRIPT_OUTPUT_FILENAME = "VO.txt";
   public static final String VERIFICATION_SCRIPT_OUTPUT_JSON = "VO.json";
-  private static final String vreOutputFilenamePrefix = "VRE_OUTPUT."; 
+  private static final String vreOutputFilenamePrefix = "ZOON_OUTPUT."; 
 
   private static final Map<Integer, Boolean> verificationState = new HashMap<Integer, Boolean>();
   // Validation information written to file

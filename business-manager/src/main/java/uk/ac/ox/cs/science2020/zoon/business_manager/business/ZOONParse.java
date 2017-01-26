@@ -69,7 +69,7 @@ public class ZOONParse implements ApplicationContextAware {
 
   //public static final String PARSE_SCRIPT_OUTPUT_FILENAME = "VO.txt";
   public static final String PARSE_SCRIPT_OUTPUT_JSON = "VO.json";
-  private static final String vreOutputFilenamePrefix = "VRE_OUTPUT."; 
+  private static final String vreOutputFilenamePrefix = "ZOON_OUTPUT."; 
 
   private static final Map<Integer, Boolean> systemsProcessState = new ConcurrentHashMap<Integer, Boolean>();
   // Parse information written to file
