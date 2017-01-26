@@ -19,12 +19,9 @@ fi
 
 pushd ${destination_dir}
 
-# e.g. <Rscript location> = /home/me/apps/R/current/bin/Rscript
-ln -s <Rscript location> .
-# e.g. <R location> = /home/me/R
-ln -s <R location>/Rscript.sh .
-ln -s <R location>/initiate_check.R .
-ln -s <R location>/CheckModule.R .
+ln -s /home/me/R/Rscript.sh .
+ln -s /home/me/R/parse_module.R .
+ln -s /home/me/R/module2json.R .
 
 popd
 

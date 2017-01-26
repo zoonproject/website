@@ -10,7 +10,7 @@
  * Database, e.g. [MySQL](https://dev.mysql.com/downloads/mysql/ "MySQL downloads") (deploy).
  * [Elasticsearch](http://www.elastic.co/ "Elasticsearch home") (currently using vers. 1.4.4) (deploy)
  * [Gitblit](http://www.gitblit.com/ "Gitblit home") (currently using vers. 1.7.1) (deploy)
- * [R](https://www.r-project.org/ "R home") (deploy)
+ * [R](https://www.r-project.org/ "R home") **at least vers. 3.2.4 and with `zoon` and `testthat` packages installed** (deploy)
 
 ## Instructions
 

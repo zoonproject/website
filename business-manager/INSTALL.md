@@ -8,8 +8,10 @@
    Elastic stores representations of ZOON public modules and workflow calls.
  * [Gitblit](http://www.gitblit.com/ "Gitblit home") (currently using vers. 1.7.1) (deploy)  
    Gitblit stores representations of ZOON private modules and workflow calls.
- * [R](https://www.r-project.org/ "R home") (deploy)  
+ * [R](https://www.r-project.org/ "R home") **at least vers. 3.2.4 and with `zoon` and `testthat` packages installed** (deploy)  
    Used to run Tom's ZOON R scripts such as those which verify modules.
+ * xvfb-run (deploy)  
+   Provided, for example, by the xorg-x11-server-Xvfb package.
 
 ## Installation
 
@@ -93,15 +95,111 @@ Download the project source and go to this application's root directory (i.e. th
 
 #### `src/main/resources/META-INF/spring/ctx/config/appCtx.fileSystemStores.xml`
 
- **TODO!**
+Edit this file if you intend to use a local filesystem directory as a store of ZOON modules, e.g.
+perhaps a git clone of https://github.com/zoonproject/modules  which is used for module parsing on
+component start-up.
+
+See [Start-up problems](#start-up-problems) for some heads-up info.
+
+ * `location`  
+   Local directory holding ZOON modules, e.g. /home/me/git/modules/R/
+ * `storeName`  
+   Textual representation of the store, e.g. ZOON modules clone on fs
+ * `hasPublicArtifacts`  
+   Indicator as to whether store contains public modules, e.g. `true` if cloned from github.
+ * `temporaryStore`  
+   Indicator as to whether private ZOON modules and workflow calls should be stored here, e.g.
+   `false` if cloned from github.
+ * `zoonStore`  
+   Indicator as to whether to publish private ZOON modules to this store, e.g. `false` if cloned
+   from github.
 
 #### `src/main/resources/META-INF/spring/ctx/config/appCtx.gitblitStores.xml`
 
- **TODO!**
+ * `applicationURL`  
+   Gitblit website, e.g. http://localhost:8080/gitblit-1.7.1/
+ * `repositoryName`  
+   Name of the git repository, e.g. zoon_artifacts
+ * `repositoryPath`  
+   Local location of the repository, e.g. /var/lib/tomcat/webapps/gitblit-1.7.1/WEB-INF/data/git/zoon_artifacts.git
+ * `repositoryURL`  
+   URL of repository, e.g. http://admin@localhost:8080/gitblit-1.7.1/r/zoon_artifacts.git
+ * `adminName`  
+   Gitblit adminstrator's name, e.g. admin
+ * `adminPassword`  
+   Gitblit administrator's password, e.g. admin
+ * `storeName`  
+   Textual representation of the store, e.g Local gitblit
+ * `hasPublicArtifacts`  
+   Indicator as to whether store contains public modules, e.g. `false` if only used for private
+   artifacts (modules and workflow calls).
+ * `temporaryStore`  
+   Indicator as to whether private ZOON modules and workflow calls should be stored here, e.g.
+   `true` if only used for private artifacts (modules and workflow calls).
+ * `zoonStore`  
+   Indicator as to whether to publish private ZOON modules to this store, e.g. `false` if only used
+   for private artifacts (modules and workflow calls).
 
 #### `src/main/resources/META-INF/spring/ctx/config/appCtx.gitHubStores.xml`
 
- **TODO!**
+ * `credentialsUser`  
+   GitHub user name.
+ * `credentialsPassword`  
+   GitHub user password.
+ * `repositoryOwner`  
+   GitHub repository owner user name.
+ * `repositoryPassword`  
+   GitHub repository owner password.
+ * `repositoryBranch`  
+   GitHub repository branch.
+ * `contentPath`  
+   Repository path to write to.
+ * `storeName`  
+   Textual representation of the store.
+ * `hasPublicArtifacts`  
+   Indicator as to whether store contains public modules, e.g. `false` if not hosting ZOON public
+   modules.
+ * `temporaryStore`  
+   Indicator as to whether private ZOON modules and workflow calls should be stored here, e.g. 
+   `false` if using Gitblit as the temporary store.
+ * `zoonStore`  
+   Indicator as to whether to publish private ZOON modules to this store, e.g. `true` if using as
+   an example public ZOON module upload store.
+
+### Installation 3: The `bash` script files.
+
+The `tools` directory contains a plethora of R and script files which prepare and run R invocations
+on the command line.
+
+#### Tom's R modules.
+
+ * ZOON module parsing  
+  `module2json.R`  
+  `parse_module.R`
+ * ZOON module verification  
+  `CheckModule.R`  
+  `initiate_check.R`
+
+#### Bash preparation and invocation scripts.
+
+**ALL these files require modification**
+
+ * ZOON module parsing  
+   `parse_prepare.sh`  
+   Create symlinks to the necessary files used to run the parsing R module in a target directory.  
+   `parse_runner.sh`  
+   R parsing invocation and system process id data file placing script.  
+   So long as there are the appropriate system access and invocation permissions, if something fails
+   then useful debug information is written by this script.
+ * ZOON module verification  
+   `verify_prepare.sh`  
+   Creates symlinks to the necessary files used to run the verifying R module in a target directory.
+   `verify_runner.sh`  
+   R verifying invocation and system process id data file placing script.  
+   So long as there are the appropriate system access and invocation permissions, if something fails
+   then useful information debug is written by this script.
+ * `Rscript.sh`  
+   This is a wrapper to the `xvfb-run` command.
 
 ### Installation 3: Building the `business-manager` war file. 
 
@@ -111,3 +209,10 @@ Download the project source and go to this application's root directory (i.e. th
 
  1. If the building of the `.war` file was successful then there should be a `.war` file in the
     `target/` directory for deployment to the Java servlet container.
+
+## Start up problems.
+
+ 1. If a system tomcat is being used, e.g. a package install, then assuming that you are in the
+    appropriate group and can deploy to tomcat `webapps`, e.g. `/var/lib/tomcat/webapps/`, then
+    the tomcat user/group may need to be able to read and execute files/directories in whichever
+    directories you have specified in the configuration files!

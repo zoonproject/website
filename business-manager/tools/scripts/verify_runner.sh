@@ -2,10 +2,10 @@
 
 WORKDIR=`pwd`
 
-ERROR_FILE=$WORKDIR/VRE_ERROR.`date +%y%m%d.%H%M%S`.xml
+ERROR_FILE=$WORKDIR/ZOON_ERROR.`date +%y%m%d.%H%M%S`.xml
 cp /dev/null $ERROR_FILE
 echo '<?xml version="1.0" encoding="UTF-8"?>' >> $ERROR_FILE
-echo "<vre_error>" >> $ERROR_FILE
+echo "<zoon_error>" >> $ERROR_FILE
 
 ARG_COUNT=$#
 if [ $ARG_COUNT -ne 3 ] ; then
@@ -20,7 +20,7 @@ if [ $ARG_COUNT -ne 3 ] ; then
   echo "  arg[6] - $7" >> $ERROR_FILE
   echo "  arg[7] - $8" >> $ERROR_FILE
   echo "  arg[8] - $9" >> $ERROR_FILE
-  echo "</vre_error>" >> $ERROR_FILE
+  echo "</zoon_error>" >> $ERROR_FILE
   exit 8
 else
   LOCAL_BASE_DIR=$1
@@ -30,10 +30,10 @@ fi
 
 rm $ERROR_FILE
 
-ERROR_FILE=$WORKDIR/VRE_ERROR.$JOB_ID.xml
+ERROR_FILE=$WORKDIR/ZOON_ERROR.$JOB_ID.xml
 cp /dev/null $ERROR_FILE
 echo '<?xml version="1.0" encoding="UTF-8"?>' >> $ERROR_FILE
-echo "<vre_error>" >> $ERROR_FILE
+echo "<zoon_error>" >> $ERROR_FILE
 echo "  <start>"`date +%y%m%d.%H%M%S`"</start>" >> $ERROR_FILE
 echo "  <local_base_dir>$LOCAL_BASE_DIR</local_base_dir>" >> $ERROR_FILE
 echo "  <job_id>$JOB_ID</job_id>" >> $ERROR_FILE
@@ -45,7 +45,7 @@ echo "  <command_line>$COMMAND_LINE</command_line>" >> $ERROR_FILE
 if [ ! -d $LOCAL_BASE_DIR ] ; then 
   echo "  <error>Local base directory [$LOCAL_BASE_DIR] does not exist</error>" >> $ERROR_FILE
   echo "  <end>"`date +%y%m%d.%H%M%S`"</end>" >> $ERROR_FILE
-  echo "</vre_error>" >> $ERROR_FILE
+  echo "</zoon_error>" >> $ERROR_FILE
   exit 9
 fi
  
@@ -54,19 +54,19 @@ CD_EXIT_STATUS=$?
 if [ "${CD_EXIT_STATUS}" -ne "0" ] ; then
   echo "  <error>Could not change director to [$LOCAL_BASE_DIR]</error>" >> $ERROR_FILE
   echo "  <end>"`date +%y%m%d.%H%M%S`"</end>" >> $ERROR_FILE
-  echo "</vre_error>" >> $ERROR_FILE
+  echo "</zoon_error>" >> $ERROR_FILE
   exit 10
 fi
 
 rm $ERROR_FILE                                                   # things seem fine so far having arrived in local base directory
 
-INFO_FILE=VRE_INFO.$JOB_ID.xml
-OUTPUT_FILE=VRE_OUTPUT.$JOB_ID
+INFO_FILE=ZOON_INFO.$JOB_ID.xml
+OUTPUT_FILE=ZOON_OUTPUT.$JOB_ID
 cp /dev/null $INFO_FILE
 cp /dev/null $OUTPUT_FILE
 
 echo '<?xml version="1.0" encoding="UTF-8"?>' >> $INFO_FILE
-echo "<vre_info>" >> $INFO_FILE
+echo "<zoon_info>" >> $INFO_FILE
 echo "  <local_base_dir>$LOCAL_BASE_DIR</local_base_dir>" >> $INFO_FILE
 echo "  <job_id>$JOB_ID</job_id>" >> $INFO_FILE
 echo "  <command_line>$COMMAND_LINE</command_line>" >> $INFO_FILE
@@ -83,7 +83,7 @@ INVOKER=`echo $COMMAND_LINE | awk '/ / {print $1}'`
 if [ ! -e ./$INVOKER ] ; then
   echo "  <error>$INVOKER not found in local base directory</error>" >> $INFO_FILE
   echo "  <end>"`date +%y%m%d.%H%M%S`"</end>" >> $INFO_FILE
-  echo "</vre_info>" >> $INFO_FILE
+  echo "</zoon_info>" >> $INFO_FILE
   exit 11
 fi
 
@@ -98,40 +98,21 @@ else
   BINARY=$INVOKER
 fi
 
-#if [ ! -x ./$BINARY ] ; then
-#  chmod 700 $BINARY
-#  CHMOD_EXIT_STATUS=$?
-#  if [ "${CHMOD_EXIT_STATUS}" -ne "0" ] ; then
-#    echo "  <error>$BINARY couldn't be made an executable</error>" >> $INFO_FILE
-#    echo "  <end>"`date +%y%m%d.%H%M%S`"</end>" >> $INFO_FILE
-#    echo "</vre_info>" >> $INFO_FILE
-#    exit 12
-#  fi
-#fi
-
-#
-# run the command line
-#
-export ZOON_TEST_OUTPUT=$LOCAL_BASE_DIR/testoutput/
-echo "  <ZOON_TEST_OUTPUT>$ZOON_TEST_OUTPUT</ZOON_TEST_OUTPUT>" >> $INFO_FILE
-
 echo "  <ls_l>"`ls -l`"</ls_l>" >> $INFO_FILE
 echo "  <end>"`date +%y%m%d.%H%M%S`"</end>" >> $INFO_FILE
-echo "</vre_info>" >> $INFO_FILE
+echo "</zoon_info>" >> $INFO_FILE
 
 ./$COMMAND_LINE >>$OUTPUT_FILE 2>&1 &                            # command goes to background (so exit status is always 0). TODO : check limit of no. of background jobs possible!
 sleep 0.2s                                                       # delay slightly to allow output to be written to file on failure before proceding
 if [[ "$BINARY" = "$INVOKER" ]] ; then                           # we've used an executable, use the process id
-  VRE_BIN_PID=$!
+  ZOON_BIN_PID=$!
 else                                                             # we've used a shell script, get the child process id
   ppid=$!
-  VRE_BIN_PID=`ps -ef| awk '$3 == '$ppid' { print $2 }'`
+  ZOON_BIN_PID=`ps -ef| awk '$3 == '$ppid' { print $2 }'`
 fi
-echo $VRE_BIN_PID > vre_bin.pid                                  # write out process id for reference
+echo $ZOON_BIN_PID > vre_bin.pid                                 # write out process id for reference
 
 VERIFY_FILE=$WORKDIR/zoon_procdir/verify-$JOB_ID
-echo "$JOB_ID|$VRE_BIN_PID" > $VERIFY_FILE
-
-#echo "**Non-chaste output** : Process id '$VRE_BIN_PID'" >> $OUTPUT_FILE
+echo "$JOB_ID|$ZOON_BIN_PID" > $VERIFY_FILE
 
 exit 0                                                           # everything went to plan
