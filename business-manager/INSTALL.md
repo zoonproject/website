@@ -177,7 +177,9 @@ on the command line.
   `parse_module.R`
  * ZOON module verification  
   `CheckModule.R`  
-  `initiate_check.R`
+  `initiate_check.R`  
+  `test_*.R`  
+  `.data_*.data`
 
 #### Bash preparation and invocation scripts.
 

@@ -22,6 +22,9 @@ pushd ${destination_dir}
 ln -s /home/me/R/Rscript.sh .
 ln -s /home/me/R/initiate_check.R .
 ln -s /home/me/R/CheckModule.R .
+ln -s /home/me/R/module2json.R .
+ln -s /home/me/R/test_*.R .
+ln -s /home/me/R/.data_*.data .
 
 popd
 
