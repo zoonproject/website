@@ -1,6 +1,6 @@
 # ZOON demo web interface installation
 
-**Warning! `business-manager` and `client` have partially complete documentation**
+**Warning! Only skeletal installation documentation has been provided.**
 
 ## Requirements
 

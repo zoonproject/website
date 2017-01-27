@@ -1,7 +1,5 @@
 # ZOON -- `client` -- Installation Instructions
 
-**Warning! Partially complete documentation**
-
 ## Requirements - Install the following before proceeding!
 
  1. Maybe a database, depending on whether you're planning to use a non-embedded database for 
@@ -27,18 +25,38 @@ Download the project source and go to this application's root directory (i.e. th
  1. Copy `src/main/webapp/resources/css/site/sample.site.css` to
          `src/main/webapp/resources/css/site/site.css`
 
-### Installation 2: (One-time) Database configuration files.
+### Installation 2: (One-time) Database configuration.
 
-For simplicity I'm just going to use the embedded HSQL database in a "dev" environment.
+Not straightforward this bit! For simplicity I'm just going to use the embedded HSQL database in a
+"dev" environment in both the building phase and in deployment (which, as it is embedded, is a
+transient database existing only for the duration of the application running!).
 
- 1. Copy `src/properties/database/sample.database.spring.properties` to
-         `src/properties/database/dev.database.embedded.properties`
  1. `cp /dev/null src/properties/database/dev.database.embedded.properties`  
     This is because the embedded HSQL database doesn't use any JDBC drivers!
+ 1. In `src/main/resources/META-INF/spring/ctx/data/appCtx.database.xml` (which is a version-controlled
+    file and so shouldn't be modified locally, so it's a hack!)
+    1. Set the `hibernate.hbm2ddl.auto` value to `create`.
+    1. Uncomment the assignment of `hibernate.hbm2ddl.import_files`
+    1. Uncomment the spring `bean` definition for `DatabasePasswordSecurer`.
+ 1. Ensure that each reference to `spring.profiles.active` (see later) is `zoon_embedded`.
 
-In reality, if you were to prefer to use, for example, MySQL, which is has been used in the source
-code, then you would copy the content of `sample.database.spring.properties` to
-`dev.database.mysql.properties` and assign the appropriate JDBC values.
+If you need to use MySQL in a deployment environment do the following : 
+
+ 1. Copy `src/properties/database/sample.database.spring.properties` to
+         `src/properties/database/dev.database.mysql.properties`
+ 1. Assign the JDBC and username and password details of `dev.database.mysql.properties`
+ 1. Ensure that in the deployment environment (not the build environment) `spring.profiles.active`
+    is `zoon_mysql`.
+ 1. When you're first creating the deployment MySQL database tables (which can be done by default
+    on application startup) then before building, make the changes outlined in part (2) above.  
+    Thereafter revert the values to the original so that subsequent startups do not overwrite the
+    earlier created data.
+
+If you want to use something other than MySQL, e.g. Postgres, then the system is not currently 
+configured to do this as changes would be required in a number of places in addition to the above,
+e.g. 
+ 1. `pom.xml` to include the relevant JDBC drivers.
+ 1. Adjust `src/main/webapp/WEB-INF/spring/appCtx.database.xml` to include a new "profile".
 
 ### Installation 3: Edit all the copied files according to your deployment configurations.
 
@@ -95,15 +113,28 @@ code, then you would copy the content of `sample.database.spring.properties` to
 
 #### `src/properties/database/dev.database.embedded.properties`
 
-See section 2 above. 
+See section 'Installation 2' above. 
 
 #### `src/main/resources/META-INF/data/spring-security/local/users.sql`
 
+Modify according to your requirements, e.g. add your own user, change passwords, etc..
+
+The default data is used for situations where you're initially loading publicly available ZOON
+modules into the application.
+
 #### `src/main/resources/META-INF/spring/ctx/ws/appCtx.ws.security-outgoing.xml`
+
+Shouldn't need modifying.
 
 #### `src/main/webapp/WEB-INF/tiles/layout/common/logo.jsp`
 
+Change to your preferred logo layout if you want. If you want to have your logo reference a local
+image file then you can add the image file to `src/main/webapp/resources/img/site/` (as it will
+be ignored by the version control system) and reference it in the `logo.jsp` file.
+
 #### `src/main/webapp/resources/css/site/site.css`
+
+Shouldn't need modifying, but any changes are possible as this file is not version-controlled.
 
 ### Installation 3: Building the `client` war file. 
 

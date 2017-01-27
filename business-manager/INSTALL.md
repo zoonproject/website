@@ -1,7 +1,5 @@
 # ZOON -- `business-manager` -- Installation Instructions
 
-**Warning! Partially complete documentation**
-
 ## Requirements - Install the following before proceeding!
 
  * [Elasticsearch](http://www.elastic.co/ "Elasticsearch home") (currently using vers. 1.4.4) (deploy)  
