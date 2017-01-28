@@ -13,4 +13,4 @@
 
 ### Deployment diagram.
 
-![Deployment diagram](https://github.com/gef_work/website/blob/master/overview.png "Deployment diagram")
+![Deployment diagram](https://github.com/gef-work/website/blob/master/overview.png "Deployment diagram")
