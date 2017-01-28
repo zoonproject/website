@@ -25,7 +25,7 @@
 ### Some fundamental functionality.
 
  1. On start-up ....
-    1. `business-manager` parses (by `R` invocation) ZOON modules from `{local-fs|GitHub} and places
+    1. `business-manager` parses (by `R` invocation) ZOON modules from `{local-fs|GitHub}` and places
        data in elastic db. Then proceeds to query Figshare for ZOON workflow calls and parses (not
        `R` invocation!) and places parsed data in elastic db.
     1. `client` reads in user data and loads JDBC database.
