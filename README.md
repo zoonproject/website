@@ -10,3 +10,7 @@
     Parent component of the ([Maven](https://maven.apache.org/ "Maven")) application build process.
  1. `shared`  
     Source code shared between `business-manager` and `client`.
+
+### Deployment diagram.
+
+![Deployment diagram](https://github.com/gef_work/website/blob/master/overview.png "Deployment diagram")
