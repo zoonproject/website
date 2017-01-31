@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+                           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+                           http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd
+                           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+  <description>
+    <![CDATA[
+    ZOON client main Spring database-related configuration context.
+    ]]>
+  </description>
+
+  <!-- Note: Place nested <beans> definitions at the end of the xml -->
+
+  <beans profile="zoon_embedded">
+    <description>
+      <![CDATA[
+      Spring profile for embedded databases.
+      ]]>
+    </description>
+
+    <jdbc:embedded-database id="zoonDataSource" type="HSQL">
+      <!-- derived from spring-security-acl.jar -->
+      <jdbc:script location="classpath:createAclSchema.sql" />
+      <jdbc:script location="classpath:META-INF/data/spring-security/local/initialize.hsql.sql" />
+      <!-- <jdbc:script location="classpath:META-INF/data/spring-security/local/users.sql" /> -->
+    </jdbc:embedded-database>
+  </beans>
+
+  <beans profile="zoon_mysql">
+    <description>
+      <![CDATA[
+      Spring profile for MySQL database.
+      ]]>
+    </description>
+
+    <bean id="zoonDataSource"
+          class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+          
+      <description>
+        <![CDATA[
+        Bean which uses the specified driver class to communicate with the underlying persistence/
+        database.
+
+        Simple implementation of the standard JDBC DataSource interface, configuring the plain old
+          JDBC DriverManager via bean properties, and returning a new Connection from every
+          getConnection call.
+        NOTE: This class is not an actual connection pool; it does not actually pool Connections. It
+          just serves as simple replacement for a full-blown connection pool, implementing the same
+          standard interface, but creating new Connections on every call.
+        Useful for test or standalone environments outside of a J2EE container, either as a 
+          DataSource bean in a corresponding ApplicationContext or in conjunction with a simple JNDI
+          environment. Pool-assuming Connection.close() calls will simply close the Connection, so
+          any DataSource-aware persistence code should work.
+        NOTE: Within special class loading environments such as OSGi, this class is effectively
+          superseded by SimpleDriverDataSource due to general class loading issues with the JDBC
+          DriverManager that be resolved through direct Driver usage (which is exactly what
+          SimpleDriverDataSource does).
+        In a J2EE container, it is recommended to use a JNDI DataSource provided by the container.
+          Such a DataSource can be exposed as a DataSource bean in a Spring ApplicationContext via
+          JndiObjectFactoryBean, for seamless switching to and from a local DataSource bean like
+          this class. For tests, you can then either set up a mock JNDI environment through Spring's
+          SimpleNamingContextBuilder, or switch the bean definition to a local DataSource (which is
+          simpler and thus recommended).
+        If you need a "real" connection pool outside of a J2EE container, consider Apache's Jakarta
+          Commons DBCP or C3P0. Commons DBCP's BasicDataSource and C3P0's ComboPooledDataSource are
+          full connection pool beans, supporting the same basic properties as this class plus
+          specific settings (such as minimal/maximal pool size etc).
+        ]]>
+      </description>
+      <property name="driverClassName" value="${zoon.database.driverClassName:appCtx.database.xml_unassigned}" />
+      <property name="url" value="${zoon.database.url:appCtx.database.xml_unassigned}" />
+      <property name="username" value="${zoon.database.username:appCtx.database.xml_unassigned}" />
+      <property name="password" value="${zoon.database.password:appCtx.database.xml_unassigned}" />
+    </bean>
+
+    <!--+
+        | See also src/main/resources/META-INF/spring/ctx/data/appCtx.database.xml
+        |
+    <jdbc:initialize-database data-source="zoonDataSource">
+      <!- - modified from spring-security-acl.jar - ->
+      <jdbc:script location="classpath:META-INF/data/spring-security/acl/createAclSchemaMySQL.sql" />
+      <jdbc:script location="classpath:META-INF/data/spring-security/local/initialize.mysql.sql" />
+    </jdbc:initialize-database>
+        |
+        +-->
+
+  </beans>
+
+</beans>

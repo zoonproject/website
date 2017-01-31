@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+  <description>
+    <![CDATA[
+      Inbound WSS4J security configurations.
+      Context referenced by spring-business_manager-config.xml
+      EndpointMapping is configured in EndpointConfiguration.java.
+    ]]>
+  </description>
+
+  <!-- This bean is @Autowired into EndpointConfiguration.java -->
+  <bean id="wsInboundGatewayInterceptor"
+        class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
+    <description>
+      A WS-Security endpoint interceptor based on Apache's WSS4J. This interceptor supports
+      messages created by the AxiomSoapMessageFactory and the SaajSoapMessageFactory.
+      The validation and securement actions executed by this interceptor are configured via
+      validationActions and securementActions properties, respectively.
+      Actions should be passed as space-separated strings.
+
+      Bean name declared in BusinessIdentifiers.java.
+    </description>
+
+    <property name="validationCallbackHandler" ref="callbackHandler" />
+    <property name="validationActions" value="UsernameToken" />
+  </bean>
+
+  <bean id="callbackHandler"
+        class="org.springframework.ws.soap.security.wss4j.callback.SimplePasswordValidationCallbackHandler">
+    <property name="users">
+      <props>
+        <prop key="${securement.business.username}">${securement.business.password}</prop>
+      </props>
+    </property>
+  </bean>
+</beans>

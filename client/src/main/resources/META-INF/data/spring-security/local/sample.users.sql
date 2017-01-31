@@ -1,0 +1,26 @@
+insert into users(username, password, enabled) values ('admin', 'aaaaa', 1);
+insert into users(username, password, enabled) values ('zoonproject@gmail.com', 'aaaaa', 1);
+insert into users(username, password, enabled) values ('timcdlucas@gmail.com', 'aaaaa', 1);
+insert into users(username, password, enabled) values ('tomaug@ceh.ac.uk', 'aaaaa', 1);
+insert into users(username, password, enabled) values ('mail@samuelbosch.com', 'aaaaa', 1);
+insert into users(username, password, enabled) values ('nick.golding.research@gmail.com', 'aaaaa', 1);
+insert into identities(username, identity) values ('zoonproject@gmail.com', 'ZOON Developers');
+insert into identities(username, identity) values ('timcdlucas@gmail.com', 'Tim CD Lucas');
+insert into identities(username, identity) values ('timcdlucas@gmail.com', 'Tim Lucas');
+insert into identities(username, identity) values ('tomaug@ceh.ac.uk', 'Tom August');
+insert into identities(username, identity) values ('mail@samuelbosch.com', 'Samuel Bosch');
+insert into identities(username, identity) values ('nick.golding.research@gmail.com', 'Nick Golding');
+insert into email(email, identity) values ('zoonproject@gmail.com', 1);
+insert into email(email, identity) values ('timcdlucas@gmail.com', 2);
+insert into email(email, identity) values ('timcdlucas@gmail.com', 3);
+insert into email(email, identity) values ('tomaug@ceh.ac.uk', 4);
+insert into email(email, identity) values ('mail@samuelbosch.com', 5);
+insert into email(email, identity) values ('nick.golding.research@gmail.com', 6);
+insert into authorities(username, authority) values ('admin', 'ROLE_ADMINISTRATOR');
+insert into authorities(username, authority) values ('zoonproject@gmail.com', 'ROLE_USER');
+insert into authorities(username, authority) values ('timcdlucas@gmail.com', 'ROLE_USER');
+insert into authorities(username, authority) values ('tomaug@ceh.ac.uk', 'ROLE_USER');
+insert into authorities(username, authority) values ('mail@samuelbosch.com', 'ROLE_USER');
+insert into authorities(username, authority) values ('nick.golding.research@gmail.com', 'ROLE_USER');
+
+commit;

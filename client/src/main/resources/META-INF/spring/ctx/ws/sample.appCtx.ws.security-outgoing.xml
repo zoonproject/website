@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+  <description>
+    <![CDATA[
+      Outbound WSS4J security configurations.
+      Referenced by spring-client-config.xml
+    ]]>
+  </description>
+
+  <bean id="wsBusManagerServicesInterceptor"
+        class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
+    <description>
+      WSS-secured outbound WS calls to the BusinessManager.
+    </description>
+    <property name="securementActions" value="UsernameToken" />
+    <property name="securementUsername" value="${securement.business.username}" />
+    <property name="securementPassword" value="${securement.business.password}" />
+  </bean>
+
+</beans>

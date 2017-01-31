@@ -1,0 +1,188 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <relativePath>../shared/pom.xml</relativePath>
+    <groupId>uk.ac.ox.cs.science2020.zoon</groupId>
+    <artifactId>parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>client</artifactId>
+  <packaging>war</packaging>
+
+  <properties>
+    <commons.fileupload-version>1.3</commons.fileupload-version>
+    <commons.io-version>2.4</commons.io-version>
+    <javax.mail-version>1.4</javax.mail-version>
+    <javax.servlet.jstl-version>1.2</javax.servlet.jstl-version>
+    <javax.servlet.servlet-api-version>2.5</javax.servlet.servlet-api-version>
+    <org.apache.tiles-version>3.0.1</org.apache.tiles-version>
+    <org.codehaus.jackson.mapper-version>1.9.13</org.codehaus.jackson.mapper-version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.easymock</groupId>
+      <artifactId>easymock</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>${javax.servlet.servlet-api-version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>uk.ac.ox.cs.science2020.zoon</groupId>
+      <artifactId>shared</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-fileupload</groupId>
+      <artifactId>commons-fileupload</artifactId>
+      <version>${commons.fileupload-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>${commons.io-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.mail</groupId>
+      <artifactId>mail</artifactId>
+      <version>${javax.mail-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>jstl</artifactId>
+      <version>${javax.servlet.jstl-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tiles</groupId>
+      <artifactId>tiles-jsp</artifactId>
+      <version>${org.apache.tiles-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.jackson</groupId>
+      <artifactId>jackson-mapper-asl</artifactId>
+      <version>${org.codehaus.jackson.mapper-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-aspects</artifactId>
+      <version>${org.springframework-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-expression</artifactId>
+      <version>${org.springframework-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-orm</artifactId>
+      <version>${org.springframework-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+      <version>${org.springframework-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-taglibs</artifactId>
+      <version>${org.springframework.security.core-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-config</artifactId>
+      <version>${org.springframework.security.core-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+      <version>${org.springframework-version}</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <finalName>ZOON</finalName>
+
+    <filters>
+      <!-- The following copy the (non-Spring) property values into xml files on maven build.  -->
+      <filter>src/properties/filter.properties</filter>
+      <filter>src/properties/database/database.filter.properties</filter>
+    </filters>
+
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.cxf</groupId>
+        <artifactId>cxf-codegen-plugin</artifactId>
+        <version>2.7.4</version>
+        <executions>
+          <execution>
+            <id>generate-sources</id>
+            <phase>generate-sources</phase>
+            <configuration>
+              <sourceRoot>src/main/java</sourceRoot>
+              <wsdlOptions>
+                <wsdlOption>
+                  <wsdl>src/main/resources/META-INF/wsdl/business_services.wsdl</wsdl>
+                </wsdlOption>
+              </wsdlOptions>
+            </configuration>
+            <goals>
+              <goal>wsdl2java</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.6</version>
+        <executions>
+          <execution>
+            <id>create_properties</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <target>
+                <!-- The following file is used by Spring/Jasypt's encryption:encryptable-property-placeholder
+                     for assigning property values on application start-up. -->
+                <concat destfile="src/main/resources/META-INF/properties/client.properties"
+                        fixlastline="yes">
+                  <fileset dir="src/properties/" includes="spring.properties" />
+                  <fileset dir="src/properties/database/" includes="dev.database.${deploy.db_vendor}.properties" />
+                </concat>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>

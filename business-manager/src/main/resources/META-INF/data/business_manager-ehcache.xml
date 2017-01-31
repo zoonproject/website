@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="ehcache.xsd"
+         updateCheck="false"
+         monitoring="autodetect"
+         dynamicConfig="true">
+
+  <diskStore path="java.io.tmpdir"/>
+
+  <defaultCache maxElementsInMemory="10000"
+                eternal="false"
+                timeToIdleSeconds="120"
+                timeToLiveSeconds="120"
+                overflowToDisk="true"
+                diskSpoolBufferSizeMB="30"
+                maxElementsOnDisk="10000000"
+                diskPersistent="false"
+                diskExpiryThreadIntervalSeconds="120"
+                memoryStoreEvictionPolicy="LRU" />
+  <!--
+  <cache name="uk.ac.ox.cs.science2020.zoon.business_manager.entity.config.ConfigPC50EvaluationStrategy"
+         maxElementsInMemory="20"
+         eternal="true"
+         overflowToDisk="false"
+         timeToIdleSeconds="0"
+         timeToLiveSeconds="0"
+         transactionalMode="off" />
+  <cache name="uk.ac.ox.cs.science2020.zoon.business_manager.entity.ObjectClass"
+         maxElementsInMemory="100"
+         eternal="false"
+         overflowToDisk="false"
+         diskSpoolBufferSizeMB="1"
+         diskPersistent="false"
+         timeToIdleSeconds="300"
+         timeToLiveSeconds="600"
+         memoryStoreEvictionPolicy="LRU"
+         transactionalMode="off" />
+  <cache name="uk.ac.ox.cs.science2020.zoon.business_manager.entity.IonChannelValues"
+         maxElementsInMemory="2000"
+         eternal="false"
+         timeToIdleSeconds="120"
+         timeToLiveSeconds="120"
+         overflowToDisk="false"
+         memoryStoreEvictionPolicy="LRU" />
+  <cache name="uk.ac.ox.cs.science2020.zoon.business_manager.entity.PIC50Data"
+         maxElementsInMemory="10000"
+         eternal="false"
+         timeToIdleSeconds="120"
+         timeToLiveSeconds="120"
+         overflowToDisk="false"
+         memoryStoreEvictionPolicy="LRU" />
+  -->
+
+  <!--+
+      | Hold cached query result sets (or rather, the identifiers values and results of value type)
+      | Should always be used in conjunction with second-level cache.
+      +-->
+  <cache name="org.hibernate.cache.internal.StandardQueryCache"
+         maxElementsInMemory="10000"
+         eternal="false"
+         timeToIdleSeconds="120"
+         timeToLiveSeconds="120"
+         overflowToDisk="false"
+         memoryStoreEvictionPolicy="LRU" />
+
+  <cache name="org.hibernate.cache.spi.UpdateTimestampsCache"
+         maxElementsInMemory="1000"
+         eternal="false"
+         timeToLiveSeconds="600"
+         overflowToDisk="false" />
+
+</ehcache>

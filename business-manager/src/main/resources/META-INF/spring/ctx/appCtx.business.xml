@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:encryption="http://www.jasypt.org/schema/encryption"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.jasypt.org/schema/encryption http://www.jasypt.org/schema/encryption/jasypt-spring31-encryption-1.xsd
+                           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+                           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+  <description>
+    <![CDATA[
+      Business manager generic context configuration options.
+    ]]>
+  </description>
+
+  <!-- Scans the classpath for annotated components, e.g. @Component, @Service and auto-configures
+       some utility beans, e.g. AutowiredAnnotationBeanPostProcessor -->
+  <context:component-scan base-package="uk.ac.ox.cs.science2020.zoon.business_manager" />
+
+  <!-- If there are any encrypted values in the properties files the value of the environment
+       var named below will be considered as the decoding password. -->
+  <encryption:encryptor-config id="jConfigBean"
+                               algorithm="PBEWithMD5AndDES"
+                               password-env-name="JASYPT_PWD" />
+
+  <encryption:string-encryptor id="jStringEncryptor"
+                               config-bean="jConfigBean" />
+
+  <!-- Rather than use context:property-placeholder we're allowing encrypted values in the 
+         application properties files.
+       Activates replacement of ${...} placeholders by registering a PropertySourcesPlaceholderConfigurer 
+         within the application context. Properties ... (see rest of tooltip!!) -->
+  <encryption:encryptable-property-placeholder encryptor="jStringEncryptor"
+                                               ignore-resource-not-found="true"
+                                               location="classpath:META-INF/properties/business_manager.properties" />
+
+  <!-- AOP -->
+  <aop:aspectj-autoproxy />
+
+</beans>

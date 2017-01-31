@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+  <description>
+    <![CDATA[
+    Business manager Spring context configurations.
+    See web.xml servlet descriptions
+    ]]>
+  </description>
+
+  <import resource="classpath:/META-INF/spring/ctx/appCtx.business.xml" />
+  <import resource="classpath:/META-INF/spring/ctx/data/business_manager/appCtx.database.elastic.xml" />
+  <import resource="classpath:/META-INF/spring/ctx/config/appCtx.config.xml" />
+  <import resource="classpath:/META-INF/spring/ctx/integration/appCtx.int.xml" />
+  <import resource="classpath:/META-INF/spring/ctx/integration/appCtx.parse.monitoring.xml" />
+  <import resource="classpath:/META-INF/spring/ctx/integration/appCtx.verify.monitoring.xml" />
+  <import resource="classpath:/META-INF/spring/ctx/ws/appCtx.ws.security-incoming.xml" />
+  <!-- <import resource="classpath:/META-INF/spring/ctx/ws/appCtx.ws.security-outgoing.xml" /> -->
+  <import resource="classpath:/META-INF/spring/ctx/ws/appCtx.ws.xml" />
+
+</beans>

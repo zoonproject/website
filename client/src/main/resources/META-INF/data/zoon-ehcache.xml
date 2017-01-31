@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="ehcache.xsd"
+         updateCheck="false"
+         monitoring="autodetect"
+         dynamicConfig="true">
+
+  <diskStore path="java.io.tmpdir"/>
+
+  <defaultCache maxElementsInMemory="10000"
+                eternal="false"
+                timeToIdleSeconds="120"
+                timeToLiveSeconds="120"
+                overflowToDisk="true"
+                diskSpoolBufferSizeMB="30"
+                maxElementsOnDisk="10000000"
+                diskPersistent="false"
+                diskExpiryThreadIntervalSeconds="120"
+                memoryStoreEvictionPolicy="LRU" />
+
+  <cache name="JobCache"
+         maxElementsInMemory="100"
+         eternal="false"
+         timeToIdleSeconds="300"
+         timeToLiveSeconds="600"
+         overflowToDisk="false" />
+
+  <cache name="JobResultCache"
+         maxElementsInMemory="100"
+         eternal="false"
+         timeToIdleSeconds="300"
+         timeToLiveSeconds="600"
+         overflowToDisk="false" />
+
+  <cache name="SimulationCache"
+         maxElementsInMemory="100"
+         eternal="false"
+         timeToIdleSeconds="300"
+         timeToLiveSeconds="600"
+         overflowToDisk="false" />
+
+  <cache name="SimulationInputCache"
+         maxElementsInMemory="100"
+         eternal="false"
+         timeToIdleSeconds="300"
+         timeToLiveSeconds="600"
+         overflowToDisk="false" />
+
+  <!--+
+      | Hold cached query result sets (or rather, the identifiers values and results of value type)
+      | Should always be used in conjunction with second-level cache.
+      +-->
+  <cache name="org.hibernate.cache.internal.StandardQueryCache"
+         maxElementsInMemory="10000"
+         eternal="false"
+         timeToIdleSeconds="120"
+         timeToLiveSeconds="120"
+         overflowToDisk="false"
+         memoryStoreEvictionPolicy="LRU" />
+
+  <cache name="org.hibernate.cache.spi.UpdateTimestampsCache"
+         maxElementsInMemory="1000"
+         eternal="false"
+         timeToLiveSeconds="600"
+         overflowToDisk="false" />
+
+</ehcache>

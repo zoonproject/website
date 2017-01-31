@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+  <description>
+    <![CDATA[
+    Security database configurations.
+    ]]>
+  </description>
+
+  <beans profile="zoon_mysql">
+    <description>
+      <![CDATA[
+      Spring profile for MySQL databases.
+      ]]>
+    </description>
+
+    <bean id="zoonACLService"
+          class="org.springframework.security.acls.jdbc.JdbcMutableAclService"
+          autowire="byName"
+          autowire-candidate="true">
+      <constructor-arg ref="zoonDataSource" />
+      <constructor-arg ref="zoonLookupStrategy" />
+      <constructor-arg ref="zoonAclCache" />
+      <property name="classIdentityQuery" value="SELECT @@IDENTITY"/>
+      <property name="sidIdentityQuery" value="SELECT @@IDENTITY"/>
+    </bean>
+  </beans>
+  <beans profile="zoon_derby">
+    <description>
+      <![CDATA[
+      Spring profile for Derby databases.
+      ]]>
+    </description>
+
+    <bean id="zoonACLService"
+          class="org.springframework.security.acls.jdbc.JdbcMutableAclService"
+          autowire="byName"
+          autowire-candidate="true">
+      <constructor-arg ref="zoonDataSource" />
+      <constructor-arg ref="zoonLookupStrategy" />
+      <constructor-arg ref="zoonAclCache" />
+      <property name="sidIdentityQuery" 
+                value="values identity_val_local()" />
+    </bean>
+  </beans>
+  <beans profile="zoon_embedded">
+    <description>
+      <![CDATA[
+      Spring profile for HSQL databases.
+      ]]>
+    </description>
+
+    <bean id="zoonACLService"
+          class="org.springframework.security.acls.jdbc.JdbcMutableAclService"
+          autowire="byName"
+          autowire-candidate="true">
+      <constructor-arg ref="zoonDataSource" />
+      <constructor-arg ref="zoonLookupStrategy" />
+      <constructor-arg ref="zoonAclCache" />
+    </bean>
+  </beans>
+</beans>

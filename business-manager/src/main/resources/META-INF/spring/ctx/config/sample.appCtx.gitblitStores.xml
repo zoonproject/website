@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
+
+  <description>
+    <![CDATA[
+      gitblit artifact store(s).
+    ]]>
+  </description>
+
+  <!--
+  <bean id="gitblit1"
+        class="uk.ac.ox.cs.science2020.zoon.business_manager.value.object.store.GitblitVO">
+    <constructor-arg name="applicationURL" value="" />
+    <constructor-arg name="repositoryName" value="" />
+    <constructor-arg name="repositoryPath" value="" />
+    <constructor-arg name="repositoryURL" value="" />
+    <constructor-arg name="adminName" value="" />
+    <constructor-arg name="adminPassword" value="" />
+    <constructor-arg name="storeName" value="" />
+    <constructor-arg name="hasPublicArtifacts" value="" type="boolean" />
+    <constructor-arg name="temporaryStore" value="" type="boolean" />
+    <constructor-arg name="zoonStore" value="" type="boolean" />
+  </bean>
+  -->
+
+</beans>
